@@ -14,6 +14,7 @@ using System.Text;
 using System.Data.SqlClient;
 using System.Data;
 using System.Web.Services;
+using System.Web.Script.Services;
 
 namespace CopyCat
 {
@@ -233,8 +234,15 @@ namespace CopyCat
             c.Name = "HDD";
             c.Datatype = "int";
             t.Columns.Add(c);
-
+            
             sourceSchema.Tables.Add(t);
-        }        
+        } 
+
+        [System.Web.Services.WebMethod()]
+        public static string MyMethod(string name)
+        {
+            return "Hello " ;
+        }
+  
     }
 }
