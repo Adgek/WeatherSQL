@@ -41,10 +41,26 @@
         function TemperatureGraph() {
             window.alert("sometext");
         }
+
+        function GetName() {
+
+            PageMethods.Name("kyle" ,Success, Failure);
+            
+        }
+        function Success(result) {
+            alert(result);
+        }
+        function Failure(error) {
+            alert(error);
+        }
 	</script>
 
     <!------------------------- Initial Form ------->
+    
     <div id="dbFormArea" runat="server">
+        <div>  
+            <asp:Button ID="Button1" runat="server" Text="Get Name" OnClientClick='GetName();return false;' />
+        </div>
         <div id="dbForm" runat="server">
             <div class="row">
                 <div class="col-md-12">

@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
+using System.Web.Services;
 
 namespace CopyCat
 {
@@ -133,6 +134,13 @@ namespace CopyCat
                 cmd.CommandTimeout = 0;
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        [WebMethod]
+        public static string Name(string append)
+        {
+            string Name = append + "Hello Rohatash Kumar";
+            return Name;
         }
 
         private void ReadDataToSchema()
