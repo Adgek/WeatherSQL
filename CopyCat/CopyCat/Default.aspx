@@ -43,9 +43,7 @@
         }
 
         function GetName() {
-
-            PageMethods.Name("kyle" ,Success, Failure);
-            
+            PageMethods.Name("kyle" ,Success, Failure);            
         }
         function Success(result) {
             alert(result);
