@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using CopyCat.Models;
 using System.IO;
 using System.Text;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace CopyCat
 {
@@ -18,10 +20,8 @@ namespace CopyCat
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-            var user = new ApplicationUser() { UserName = "admin@admin.com", Email = "admin@admin.com" };
-            IdentityResult result = manager.Create(user, "Admin123!");
+            
+            gen = new ScriptGenerator();
         }
 
         private Schema sourceSchema;
@@ -37,7 +37,7 @@ namespace CopyCat
         private void ReadCSV()
         {
             sourceSchema = new Schema();
-            sourceSchema.Name = "WheatherData";
+            sourceSchema.Name = "WeatherData";
 
             if (FileUploadControl.HasFile)
             {
@@ -92,7 +92,7 @@ namespace CopyCat
             // Read the file into the byte array.
             myStream.Read(Input, 0, fileLen);
 
-            return System.Text.Encoding.Default.GetString(Input);
+            return System.Text.Encoding.Default.GetString(Input).Replace('\n',' ').Replace(" ","");
         }
 
         protected void UploadButton_Click(object sender, EventArgs e)
@@ -100,71 +100,45 @@ namespace CopyCat
             ReadCSV();
             BuildSchema();
             ReadDataToSchema();
+            string script = gen.GenerateMasterScript(sourceSchema);
+            string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB_db;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+
+            using (SqlConnection conn = new SqlConnection(conString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(script, conn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private void ReadDataToSchema()
         {
-            //Table state = sourceSchema.Tables.Where(t => t.)
+            CopyCat.Models.Table Weather = sourceSchema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
             foreach (string[] row in data)
             {
+                Weather.Rows.Add("(SELECT ID FROM YEAR WHERE yearname = " + row[2].Substring(0, 4) + ")," +
+                                 "(SELECT ID FROM MONTH WHERE monthname = " + row[2].Substring(4, 2) + ")," +
+                                 " (SELECT ID FROM STATE WHERE statecode = " + row[0] +")," +
+                                 row[18] + "," +
+                                 row[19] + "," +
+                                 row[4]+ "," +
+                                 row[3]+ "," +
+                                 row[1]);
             }
+            Weather.Rows.RemoveAt(0);
         }
 
 
 
         private void BuildSchema()
         {
-            //State Table
+            //Weather Table
             CopyCat.Models.Table t = new CopyCat.Models.Table();
-
-            t.Name = "State";
-            // cols
-            Column c = new Column();
-            c.Name = "StateCode";
-            c.Datatype = "int";
-            c.IsPK = true;
-            t.Columns.Add(c);
-
-            c = new Column();
-            c.Name = "StateName";
-            c.Datatype = "varchar";
-            c.Size = "50";
-            t.Columns.Add(c);
-            sourceSchema.Tables.Add(t);
-
-            //Year Table
-            t = new CopyCat.Models.Table();
-
-            t.Name = "Year";
-            // cols
-            c = new Column();
-            c.Name = "Year";
-            c.Datatype = "int";
-            c.IsPK = true;
-            t.Columns.Add(c);
-
-            sourceSchema.Tables.Add(t);
-
-            //Month Table
-            t = new CopyCat.Models.Table();
-
-            t.Name = "Month";
-            // cols
-            c = new Column();
-            c.Name = "Month";
-            c.Datatype = "varchar";
-            c.Size = "50";
-            c.IsPK = true;
-            t.Columns.Add(c);
-
-            sourceSchema.Tables.Add(t);
-
-            //Month Table
-            t = new CopyCat.Models.Table();
 
             t.Name = "Weather";
             // cols
-            c = new Column();
+            Column c = new Column();
             c.Name = "ID";
             c.Datatype = "int";
             c.IsPK = true;
@@ -209,6 +183,12 @@ namespace CopyCat
             c = new Column();
             c.Name = "Pcp";
             c.Datatype = "float";
+            t.Columns.Add(c);
+
+            c = new Column();
+            c.Name = "Division";
+            c.Datatype = "varchar";
+            c.Size = "3";
             t.Columns.Add(c);
 
             sourceSchema.Tables.Add(t);

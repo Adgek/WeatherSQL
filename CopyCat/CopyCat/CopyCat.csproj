@@ -184,6 +184,9 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
+    <EmbeddedResource Include="creationscript.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="packages.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -192,6 +195,8 @@
     <Content Include="Account\Web.config" />
     <Content Include="ApplicationInsights.config" />
     <None Include="Properties\PublishProfiles\CopyCat6347.pubxml" />
+    <None Include="Properties\PublishProfiles\WeatherDB %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\WeatherDB.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Report.aspx" />
     <Content Include="Scripts\bootstrap.js" />
@@ -229,7 +234,9 @@
     <Content Include="Site.Master" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Web.config" />
-    <Content Include="Bundle.config" />
+    <Content Include="Bundle.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Site.Mobile.Master" />
     <None Include="Web.Debug.config">

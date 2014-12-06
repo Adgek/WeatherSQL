@@ -14,6 +14,10 @@ namespace CopyCat.Account
         {
             // Enable this once you have account confirmation enabled for password reset functionality
             //ForgotPasswordHyperLink.NavigateUrl = "Forgot";
+            var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
+            var user = new ApplicationUser() { UserName = "admin@admin.com", Email = "admin@admin.com" };
+            IdentityResult result = manager.Create(user, "Admin123!");
         }
 
         protected void LogIn(object sender, EventArgs e)
