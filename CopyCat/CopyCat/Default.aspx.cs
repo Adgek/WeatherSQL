@@ -100,14 +100,37 @@ namespace CopyCat
             ReadCSV();
             BuildSchema();
             ReadDataToSchema();
-            string script = gen.GenerateMasterScript(sourceSchema);
-            string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB_db;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
-
+            string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=master;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            string createscript = gen.ReadDbaseScript("createdatabase.sql");
+            string dropscript = gen.ReadDbaseScript("dropdatabase.sql");
             using (SqlConnection conn = new SqlConnection(conString))
+            {
+                conn.Open();
+                SqlCommand cmd;
+                try
+                {
+                    cmd = new SqlCommand(dropscript, conn);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //log
+                }
+
+                cmd = new SqlCommand(createscript, conn);
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+            }
+
+            string script = gen.GenerateMasterScript(sourceSchema);
+            string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
                 SqlCommand cmd = new SqlCommand(script, conn);
                 cmd.CommandType = CommandType.Text;
+                cmd.CommandTimeout = 0;
                 cmd.ExecuteNonQuery();
             }
         }

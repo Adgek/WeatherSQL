@@ -14,19 +14,20 @@ namespace CopyCat.Models
         public string GenerateMasterScript(Schema schema)
         {
             string finalScript ="";
-            finalScript += ReadDbaseScript();
+            finalScript += ReadDbaseScript("creationscript.sql");
             Table weather = schema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
             finalScript += Environment.NewLine + GenerateRowInserts(weather);
 
             return finalScript;
         }
 
-        private string ReadDbaseScript()
+        
+        public string ReadDbaseScript(string scriptName)
         {
             string commandText;
             Assembly thisAssembly = Assembly.GetExecutingAssembly();
             using (Stream s = thisAssembly.GetManifestResourceStream(
-                  "CopyCat.creationscript.sql"))
+                  "CopyCat." + scriptName))
             {
                 using (StreamReader sr = new StreamReader(s))
                 {

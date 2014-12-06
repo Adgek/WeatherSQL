@@ -1,22 +1,9 @@
-USE master
-IF EXISTS(select * from sys.databases where name='WeatherDB')
-DROP DATABASE [WeatherDB]
-GO
-
-CREATE DATABASE [WeatherDB]
-GO
-
-USE WeatherDB
-GO
-
-
 CREATE TABLE [State] (
   [id] int NOT NULL,
   [statecode] int,
   [statename] varchar(40),
   PRIMARY KEY ([id])
   );
-
 
 insert into [State]([id],[statecode],[statename]) 
 	values ('1','001','Alabama'),
@@ -365,7 +352,6 @@ insert into [Year]([id],[yearname])
 	('213','2012'),
 	('214','2013'),
 	('215','2014')
-GO
 
 CREATE TABLE Weather (
   [ID] int IDENTITY NOT NULL,
