@@ -44,6 +44,9 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
+
+                <asp:ScriptReference Path="~/Scripts/Chart.min.js" />
+                <asp:ScriptReference Path="~/Scripts/ion.rangeSlider.min.js" />
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
