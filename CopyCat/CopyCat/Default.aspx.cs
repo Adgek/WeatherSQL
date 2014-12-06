@@ -37,7 +37,7 @@ namespace CopyCat
         private void ReadCSV()
         {
             sourceSchema = new Schema();
-            sourceSchema.Name = "WheatherData";
+            sourceSchema.Name = "WeatherData";
 
             if (FileUploadControl.HasFile)
             {
