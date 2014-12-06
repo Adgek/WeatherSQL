@@ -6,11 +6,16 @@
     <link href="Content/ChartStyles.css" rel="stylesheet" />
     <link href="Content/ion.rangeSlider.skinNice.css" rel="stylesheet" />
     <script>
+       PageMethods.My
+
         var GraphTimeDescriptor = 1
         var StateSelection = "Manhattan"
         var randomScalingFactor = function () { return Math.round(Math.random() * 100) };
+        var lineChartX = ["January", "February", "March", "April", "May", "June", "July"]
+        var lineChartY = [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+        
         var lineChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: lineChartX,
             datasets: [
 				{
 				    label: "My Second dataset",
@@ -20,10 +25,9 @@
 				    pointStrokeColor: "#fff",
 				    pointHighlightFill: "#fff",
 				    pointHighlightStroke: "rgba(151,187,205,1)",
-				    data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+				    data: lineChartY
 				}
             ]
-
         }
 
         window.onload = function () {
@@ -39,9 +43,13 @@
             window.alert(StateSelection);
         }
         function TemperatureGraph() {
-            window.alert("sometext");
+            window.alert(PageMethods.MyMethod)
+            console.log(PageMethods.MyMethod)
+            console.log(PageMethods.MyMethod)
+            
+
         }
-	</script>
+    </script>
 
     <!------------------------- Initial Form ------->
     <div id="dbFormArea" runat="server">
@@ -108,28 +116,31 @@
                 </button>
                 <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenuGraphSelection">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
+                    
                 </ul>
             </div>
         </div>
