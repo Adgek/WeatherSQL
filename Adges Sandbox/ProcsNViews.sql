@@ -1,4 +1,6 @@
-
+-- *******************
+-- VIEWS
+-- *******************
 CREATE VIEW getPrecipitationView AS
 	SELECT State.statecode, Month.monthname AS [month], Year.yearname AS [year], Weather.pcp
 	FROM Weather
@@ -22,6 +24,10 @@ CREATE VIEW getTemperatureView AS
 	INNER JOIN Month on Weather.MID = Month.id
 	INNER JOIN State on Weather.SID = State.id
 
+
+-- *******************
+-- Stored Procedures
+-- *******************
 CREATE PROCEDURE getPrecipitationForArea @AreaCode int
 AS
 SELECT [month], [year], pcp
