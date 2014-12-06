@@ -6,8 +6,6 @@
     <link href="Content/ChartStyles.css" rel="stylesheet" />
     <link href="Content/ion.rangeSlider.skinNice.css" rel="stylesheet" />
     <script>
-       PageMethods.My
-
         var GraphTimeDescriptor = 1
         var StateSelection = "Manhattan"
         var randomScalingFactor = function () { return Math.round(Math.random() * 100) };

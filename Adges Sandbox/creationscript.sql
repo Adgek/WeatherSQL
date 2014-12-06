@@ -1,6 +1,10 @@
-DROP DATABASE WeatherDB
-/* Create or use database*/
+USE master
+IF EXISTS(select * from sys.databases where name='WeatherDB')
+DROP DATABASE [WeatherDB]
+GO
+
 CREATE DATABASE [WeatherDB]
+GO
 
 USE WeatherDB
 GO
@@ -361,3 +365,17 @@ insert into [Year]([id],[yearname])
 	('213','2012'),
 	('214','2013'),
 	('215','2014')
+GO
+
+CREATE TABLE Weather (
+  [ID] int IDENTITY NOT NULL,
+  [YID] int FOREIGN KEY REFERENCES [Year](id) NOT NULL,
+  [MID] int FOREIGN KEY REFERENCES [Month](id) NOT NULL,
+  [SID] int FOREIGN KEY REFERENCES [State](id) NOT NULL,
+  [Tmin] float NOT NULL,
+  [Tmax] float NOT NULL,
+  [Tavg] float NOT NULL,
+  [Pcp] float NOT NULL,
+  [Division] int NOT NULL,  
+  PRIMARY KEY ([id])
+  );
