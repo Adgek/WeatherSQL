@@ -72,11 +72,54 @@ insert into [State]([id],[statecode],[statename])
 	('55','107','Southwest Region'),
 	('56','108','Northwest Region'),
 	('57','109','West Region'),
-	('58','110','National')
+	('58','110','National'),
+	('59','111','Great Plains'),
+	('60','115','Southern Plains and Gulf Coast'),
+	('61','120','US Rockies and Westward'),
+	('62','121','NWS Eastern Region'),
+	('63','122','NWS Southern Region'),
+	('64','123','NWS Central Region'),
+	('65','124','NWS Western Region'),
+	('66','201','Pacific Northwest Basin'),
+	('67','202','California River Basin'),
+	('68','203','Great Basin'),
+	('69','204','Lower Colorado River Basin'),
+	('70','205','Upper Colorado River Basin'),
+	('71','206','Rio Grande River Basin'),
+	('72','207','Texas Gulf Coast River Basin'),
+	('73','208','Arkansas-White-Red Basin'),
+	('74','209','Lower Mississippi River Basin'),
+	('75','210','Missouri River Basin'),
+	('76','211','Souris-Red-Rainy Basin'),
+	('77','212','Upper Mississippi River Basin'),
+	('78','213','Great Lakes Basin'),
+	('79','214','Tennessee River Basin'),
+	('80','215','Ohio River Basin'),
+	('81','216','South Atlantic-Gulf Basin'),
+	('82','217','Mid-Atlantic Basin'),
+	('83','218','New England Basin'),
+	('84','220','Mississippi River Basin & Tributaties'),
+	('85','250','Spring Wheat Belt'),
+	('86','255','Primary Hard Red Winter Wheat Belt'),
+	('87','256','Winter Wheat Belt'),
+	('88','260','Primary Corn and Soybean Belt'),
+	('89','261','Corn Belt'),
+	('90','262','Soybean Belt'),
+	('91','265','Cotton Belt'),
+	('92','350','Spring Wheat Belt'),
+	('93','356','Winter Wheat Belt'),
+	('94','361','Corn Belt'),
+	('95','362','Soybean Belt'),
+	('96','365','Cotton Belt'),
+	('97','450','Spring Wheat Belt'),
+	('98','456','Winter Wheat Belt'),
+	('99','461','Corn Belt'),
+	('100','462','Soybean Belt'),
+	('101','465','Cotton Belt')
 
 CREATE TABLE [Month] (
   [id] int NOT NULL,
-  [monthname] varchar(3),
+  [monthname] varchar(2),
   PRIMARY KEY ([id])
   );
 
@@ -97,12 +140,12 @@ insert into [Month]([id],[monthname])
 
 CREATE TABLE [Year] (
   [id] int NOT NULL,
-  [yearname] varchar(3),
+  [yearname] varchar(4),
   PRIMARY KEY ([id])
   );
 
 
-insert into [Year]([id],[yearname],) 
+insert into [Year]([id],[yearname]) 
 	values ('1','1800'),
 	('2','1801'),
 	('3','1802'),
