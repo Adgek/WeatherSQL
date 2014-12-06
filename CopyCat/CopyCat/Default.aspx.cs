@@ -147,7 +147,9 @@ namespace CopyCat
                                  row[19] + "," +
                                  row[4]+ "," +
                                  row[3]+ "," +
-                                 row[1]);
+                                 row[1]+ "," +
+                                 row[9]+ "," +
+                                 row[10]);
             }
             Weather.Rows.RemoveAt(0);
         }
@@ -214,9 +216,17 @@ namespace CopyCat
             c.Size = "3";
             t.Columns.Add(c);
 
-            sourceSchema.Tables.Add(t);
-        }
+            c = new Column();
+            c.Name = "CDD";
+            c.Datatype = "int";
+            t.Columns.Add(c);
 
-        
+            c = new Column();
+            c.Name = "HDD";
+            c.Datatype = "int";
+            t.Columns.Add(c);
+
+            sourceSchema.Tables.Add(t);
+        }        
     }
 }
