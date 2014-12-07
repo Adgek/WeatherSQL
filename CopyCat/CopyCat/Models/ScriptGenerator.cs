@@ -14,7 +14,7 @@ namespace CopyCat.Models
         public string GenerateMasterScript(Schema schema)
         {
             string finalScript ="";
-            finalScript += ReadDbaseScript("creationscript.sql");
+            finalScript += ReadDbaseScript("SqlScripts.dbasesetup.creationscript.sql");
             Table weather = schema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
             finalScript += Environment.NewLine + GenerateRowInserts(weather);
 

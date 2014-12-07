@@ -362,7 +362,6 @@ CREATE TABLE Weather (
   [Tmax] float NOT NULL,
   [Tavg] float NOT NULL,
   [Pcp] float NOT NULL,
-  [Division] int NOT NULL,
   [CDD] int NOT NULL,
   [HDD] int NOT NULL,  
   PRIMARY KEY ([id])

@@ -103,8 +103,8 @@ namespace CopyCat
             BuildSchema();
             ReadDataToSchema();
             string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=master;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
-            string createscript = gen.ReadDbaseScript("createdatabase.sql");
-            string dropscript = gen.ReadDbaseScript("dropdatabase.sql");
+            string createscript = gen.ReadDbaseScript("SqlScripts.dbasesetup.createdatabase.sql");
+            string dropscript = gen.ReadDbaseScript("SqlScripts.dbasesetup.dropdatabase.sql");
             using (SqlConnection conn = new SqlConnection(conString))
             {
                 conn.Open();
@@ -123,17 +123,37 @@ namespace CopyCat
                 cmd = new SqlCommand(createscript, conn);
                 cmd.CommandType = CommandType.Text;
                 cmd.ExecuteNonQuery();
+
+
             }
 
             string script = gen.GenerateMasterScript(sourceSchema);
             string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
             using (SqlConnection conn = new SqlConnection(conString2))
             {
+                SqlCommand cmd;
                 conn.Open();
-                SqlCommand cmd = new SqlCommand(script, conn);
+
+                cmd = new SqlCommand(script, conn);
                 cmd.CommandType = CommandType.Text;
                 cmd.CommandTimeout = 0;
                 cmd.ExecuteNonQuery();
+
+
+
+                string procsscript;
+                for (int x = 1; x < 4; x++)
+                {
+                    procsscript = gen.ReadDbaseScript("SqlScripts.views.view" + x + ".sql");
+                    cmd = new SqlCommand(procsscript, conn);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+
+                    procsscript = gen.ReadDbaseScript("SqlScripts.procedures.procedure" + x + ".sql");
+                    cmd = new SqlCommand(procsscript, conn);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -156,7 +176,6 @@ namespace CopyCat
                                  row[19] + "," +
                                  row[4]+ "," +
                                  row[3]+ "," +
-                                 row[1]+ "," +
                                  row[9]+ "," +
                                  row[10]);
             }
@@ -219,11 +238,6 @@ namespace CopyCat
             c.Datatype = "float";
             t.Columns.Add(c);
 
-            c = new Column();
-            c.Name = "Division";
-            c.Datatype = "varchar";
-            c.Size = "3";
-            t.Columns.Add(c);
 
             c = new Column();
             c.Name = "CDD";
