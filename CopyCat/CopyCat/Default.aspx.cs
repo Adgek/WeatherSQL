@@ -22,7 +22,7 @@ namespace CopyCat
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            System.Diagnostics.Trace.WriteLine("Program started!", "DeveloperLog");
             gen = new ScriptGenerator();
         }
 
@@ -54,6 +54,7 @@ namespace CopyCat
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
                     StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
                 }
             }
@@ -94,7 +95,7 @@ namespace CopyCat
             // Read the file into the byte array.
             myStream.Read(Input, 0, fileLen);
 
-            return System.Text.Encoding.Default.GetString(Input).Replace('\n',' ').Replace(" ","");
+            return System.Text.Encoding.Default.GetString(Input).Replace('\n', ' ').Replace(" ", "");
         }
 
         protected void UploadButton_Click(object sender, EventArgs e)
@@ -108,53 +109,41 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString))
             {
                 conn.Open();
-                SqlCommand cmd;
                 try
                 {
-                    cmd = new SqlCommand(dropscript, conn);
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                    NonQueryExec(conn, dropscript);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    //log
+                    System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
                 }
-
-                cmd = new SqlCommand(createscript, conn);
-                cmd.CommandType = CommandType.Text;
-                cmd.ExecuteNonQuery();
-
-
+                NonQueryExec(conn, createscript);
             }
 
             string script = gen.GenerateMasterScript(sourceSchema);
             string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
             using (SqlConnection conn = new SqlConnection(conString2))
             {
-                SqlCommand cmd;
                 conn.Open();
-
-                cmd = new SqlCommand(script, conn);
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandTimeout = 0;
-                cmd.ExecuteNonQuery();
-
-
+                NonQueryExec(conn, script);
 
                 string procsscript;
                 for (int x = 1; x < 4; x++)
                 {
                     procsscript = gen.ReadDbaseScript("SqlScripts.views.view" + x + ".sql");
-                    cmd = new SqlCommand(procsscript, conn);
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-
+                    NonQueryExec(conn, procsscript);
                     procsscript = gen.ReadDbaseScript("SqlScripts.procedures.procedure" + x + ".sql");
-                    cmd = new SqlCommand(procsscript, conn);
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
+                    NonQueryExec(conn,procsscript);
                 }
             }
+        }
+
+        private static void NonQueryExec(SqlConnection conn, string script, int timeout=0)
+        {
+            SqlCommand cmd = new SqlCommand(script, conn);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 0;
+            cmd.ExecuteNonQuery();
         }
 
         [WebMethod]
@@ -167,19 +156,56 @@ namespace CopyCat
         private void ReadDataToSchema()
         {
             CopyCat.Models.Table Weather = sourceSchema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
+            string tmin="", tmax="", tavg= "", pcp = "";
+            int count = 1;
             foreach (string[] row in data)
             {
+                try
+                {
+                    tmin = GetTemp(count, row[18], "temp min");
+                    tmax = GetTemp(count, row[19], "temp max");
+                    tavg = GetTemp(count, row[4], "temp average");
+                }
+                catch
+                {
+                    continue;
+                }
+                try
+                {
+                    pcp = MathFunctions.InchesToMillimetres(row[3]);
+                }
+                catch
+                {
+                    System.Diagnostics.Trace.WriteLine("Value: '" + row[3] + "' for pcp was invalid for row " + count + ".");
+                    continue;
+                }
                 Weather.Rows.Add("(SELECT ID FROM YEAR WHERE yearname = " + row[2].Substring(0, 4) + ")," +
                                  "(SELECT ID FROM MONTH WHERE monthname = " + row[2].Substring(4, 2) + ")," +
-                                 " (SELECT ID FROM STATE WHERE statecode = " + row[0] +")," +
-                                 row[18] + "," +
-                                 row[19] + "," +
-                                 row[4]+ "," +
-                                 row[3]+ "," +
-                                 row[9]+ "," +
-                                 row[10]);
+                                 " (SELECT ID FROM STATE WHERE statecode = " + row[0] + ")," +
+                                 tmin + "," +
+                                 tmax + "," + 
+                                 tavg + "," + 
+                                 pcp + "," + 
+                                 row[9] + "," + // CDD
+                                 row[10]); //HDD
+                count++;
             }
             Weather.Rows.RemoveAt(0);
+        }
+
+        private static string GetTemp(int count, string valueToConvert, string element)
+        {
+            string value ="";
+            try
+            {
+                value = MathFunctions.FahrenheitToCelcius(valueToConvert);
+            }
+            catch
+            {
+                System.Diagnostics.Trace.WriteLine("Value: '" + valueToConvert + "' for " + element + " was invalid for row " + count + ".");
+                throw;
+            }
+            return value;
         }
 
 
@@ -248,15 +274,15 @@ namespace CopyCat
             c.Name = "HDD";
             c.Datatype = "int";
             t.Columns.Add(c);
-            
+
             sourceSchema.Tables.Add(t);
-        } 
+        }
 
         [System.Web.Services.WebMethod()]
         public static string MyMethod(string name)
         {
-            return "Hello " ;
+            return "Hello ";
         }
-  
+
     }
 }
