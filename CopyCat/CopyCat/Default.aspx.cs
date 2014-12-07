@@ -238,10 +238,31 @@ namespace CopyCat
             sourceSchema.Tables.Add(t);
         } 
 
-        [System.Web.Services.WebMethod()]
-        public static string MyMethod(string name)
+        [WebMethod]
+        public static string GetPrecipitationData(string StateCode)
         {
-            return "Hello " ;
+            //connect to database
+            //call precipitation procedure
+            //put data in a readable format
+            return "Hello" ;
+        }
+
+        [WebMethod]
+        public static string GetCoolingHeatingDaysData(string StateCode)
+        {
+            //connect to database
+            //call precipitation procedure
+            //put data in a readable format
+            return "Hello";
+        }
+
+        [WebMethod]
+        public static string GetTemperatureData(string StateCode)
+        {
+            //connect to database
+            //call precipitation procedure
+            //put data in a readable format
+            return "Hello";
         }
   
     }

@@ -8,9 +8,21 @@
     <script>
         var GraphTimeDescriptor = 1
         var StateSelection = "Manhattan"
-        var randomScalingFactor = function () { return Math.round(Math.random() * 100) };
+        var MinimumYear = 1990
+        var MaximumYear = 2015
+
+        var OriginalChartXData = []
+        var OriginalChartYData = []
+        var OriginalChartYData2 = []
+        var OriginalChartYData3 = []
+
+        var ChartXData = []
+        var ChartYData = []
+        var ChartYData2 = []
+        var ChartYData3 = []
+       
         var lineChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: ChartXData,
             datasets: [
 				{
 				    label: "My Second dataset",
@@ -20,10 +32,9 @@
 				    pointStrokeColor: "#fff",
 				    pointHighlightFill: "#fff",
 				    pointHighlightStroke: "rgba(151,187,205,1)",
-				    data: [randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor(), randomScalingFactor()]
+				    data: ChartYData
 				}
             ]
-
         }
 
         window.onload = function () {
@@ -32,24 +43,89 @@
             });
         }
 
+        function DrawGraph() {
+            UpdateGraph()
+            $("#canvas").replaceWith("<canvas id=\"canvas\" height=\"450\" width=\"800\"></canvas>");
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctx).Line(lineChartData, {});
+        }
+
+        function UpdateGraph() {
+            var i = 0
+
+            ChartXData = []
+            ChartYData = []
+            ChartYData2 = []
+            ChartYData3 = []
+
+            for (i = 0; i < OriginalChartXData.length; i++) {
+                if (OriginalChartXData[i] >= MinimumYear && OriginalChartXData[i] <= MaximumYear) {
+                    ChartXData.push(OriginalChartXData[i])
+                    ChartYData.push(OriginalChartYData[i])
+                    if (OriginalChartYData2.length > 0) {
+                        ChartYData.push(OriginalChartYData2[i])
+                    }
+                    if (OriginalChartYData3.length > 0) {
+                        ChartYData.push(OriginalChartYData3[i])
+                    }
+                }
+            }
+
+            lineChartData = {
+                labels: ChartXData,
+                datasets: [
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: ChartYData
+                    }
+                ]
+            }
+        }
+
         function PrecipitationGraph() {
-            window.alert(GraphTimeDescriptor);
+            PageMethods.GetPrecipitationData(StateSelection, PrecipitationSuccess, Failure);
         }
         function CoolingHeatingGraph() {
-            window.alert(StateSelection);
+            PageMethods.GetCoolingHeatingDaysData(StateSelection, CoolingHeatingSuccess, Failure);
         }
         function TemperatureGraph() {
-            window.alert("sometext");
+            PageMethods.GetTemperatureData(StateSelection, TemperatureSuccess, Failure);
+        }
+       
+        function PrecipitationSuccess(result) {  
+            var str = "{ \"ValueX\": [1990, 1991, 1992, 1993], \"ValueY\": [1, 2, 4, 5] }"
+            var arr = JSON.parse(str);
+            var i;
+
+            OriginalChartXData = []
+            OriginalChartYData = []
+
+            for (i = 0; i < arr.ValueX.length; i++) {   
+                if (arr.ValueX[i] >= MinimumYear && arr.ValueX[i] <= MaximumYear) {
+                    OriginalChartXData.push(arr.ValueX[i])
+                    OriginalChartYData.push(arr.ValueY[i])
+                }               
+            }           
+
+            DrawGraph()
         }
 
-        function GetName() {
-
-            PageMethods.Name("kyle" ,Success, Failure);
+        function CoolingHeatingSuccess(result) {
             
+            DrawGraph()
         }
-        function Success(result) {
-            alert(result);
+
+        function TemperatureSuccess(result) {
+           
+            DrawGraph()
         }
+
         function Failure(error) {
             alert(error);
         }
@@ -174,7 +250,17 @@
                     var $this = $(this),
 						value = $this.prop("value");
 
-                    console.log("Value: " + value);
+                    var res = value.split(";")
+                    MinimumYear = res[0]
+                    MaximumYear = res[1]
+
+                    var maxYear = Math.max.apply(Math, OriginalChartXData);
+                    var minYear = Math.min.apply(Math, OriginalChartXData);
+
+                    if (MinimumYear >= minYear && MinimumYear <= maxYear && MaximumYear >= minYear && MaximumYear <= maxYear) {
+                        DrawGraph()
+                    }
+                    
                 });
 			</script>
 		</div>
