@@ -25,7 +25,7 @@ namespace CopyCat
             System.Diagnostics.Trace.WriteLine("Program started!", "DeveloperLog");
             gen = new ScriptGenerator();
         }
-
+        static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
         private Schema sourceSchema;
         private Schema destSchema;
 
@@ -121,7 +121,7 @@ namespace CopyCat
             }
 
             string script = gen.GenerateMasterScript(sourceSchema);
-            string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
@@ -144,13 +144,6 @@ namespace CopyCat
             cmd.CommandType = CommandType.Text;
             cmd.CommandTimeout = 0;
             cmd.ExecuteNonQuery();
-        }
-
-        [WebMethod]
-        public static string Name(string append)
-        {
-            string Name = append + "Hello Rohatash Kumar";
-            return Name;
         }
 
         private void ReadDataToSchema()
@@ -190,7 +183,6 @@ namespace CopyCat
                                  row[10]); //HDD
                 count++;
             }
-            Weather.Rows.RemoveAt(0);
         }
 
         private static string GetTemp(int count, string valueToConvert, string element)
@@ -278,22 +270,96 @@ namespace CopyCat
             sourceSchema.Tables.Add(t);
         }
 
+        private static List<List<string>> QueryExec(SqlConnection conn, string script,int numFields, int timeout = 0)
+        {
+            SqlCommand cmd = new SqlCommand(script, conn);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandTimeout = 0;
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<List<string>> rows = new List<List<string>>();
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    List<string> row = new List<string>();
+                    for (int x = 0; x < numFields; x++ )
+                    {
+                        row.Add(String.Format("{0}", reader[x]));
+                    }
+                    rows.Add(row);
+                }
+            }
+            reader.Close();
+            return rows;
+        }
+
         [WebMethod]
         public static string GetPrecipitationData(string StateCode)
         {
-            //connect to database
-            //call precipitation procedure
-            //put data in a readable format
-            return "Hello" ;
+            List<List<string>> rows = new List<List<string>>();
+            using (SqlConnection conn = new SqlConnection(conString2))
+            {
+                conn.Open();
+                rows = QueryExec(conn, "EXEC getPrecipitationForArea " + 103, 3);
+            }
+            List<string> headers = new List<string>();
+            headers.Add("month");
+            headers.Add("year");
+            headers.Add("pcp");
+
+
+            return GetJsonOutput(rows, headers);
+        }
+
+        // "{ \"Years\": [1990, 1990, 1990, 1990, 1991, 1991, 1992, 1993], \"Months\": [1, 2, 4, 5, 5,6,7,8], \"Precipitation\": [1, 2, 4, 5, 1, 2, 3,4] }"
+        static private string GetJsonOutput(List<List<string>> rows, List<string> headers)
+        {
+            string final = "";
+            int numColumns = headers.Count;
+
+            for (int x = 0; x < headers.Count; x++ )
+            {
+                headers[x] = "\"" + headers[x] + "\": [";
+            }
+
+            for (int x = 0; x < rows.Count; x++ )
+            {
+                for (int y = 0; y < headers.Count; y++ )
+                {
+                    if (x > 0)
+                        headers[y] += ",";
+                    headers[y] += rows[x][y];
+
+                }
+            }
+            final = "{ ";
+            for (int x = 0; x < headers.Count; x++)
+            {
+                if(x > 0)
+                    final += ",";
+                final += headers[x] + "]";
+            }
+            final += "}";
+
+            return final;
         }
 
         [WebMethod]
         public static string GetCoolingHeatingDaysData(string StateCode)
         {
-            //connect to database
-            //call precipitation procedure
-            //put data in a readable format
-            return "Hello";
+            List<List<string>> rows = new List<List<string>>();
+            using (SqlConnection conn = new SqlConnection(conString2))
+            {
+                conn.Open();
+                rows = QueryExec(conn, "EXEC getPrecipitationForArea " + 103, 3);
+            }
+            List<string> headers = new List<string>();
+            headers.Add("month");
+            headers.Add("year");
+            headers.Add("pcp");
+
+
+            return GetJsonOutput(rows, headers);
         }
 
         [WebMethod]
