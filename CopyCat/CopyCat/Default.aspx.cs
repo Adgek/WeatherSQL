@@ -328,7 +328,7 @@ namespace CopyCat
                 {
                     if (x > 0)
                         headers[y] += ",";
-                    headers[y] += rows[x][y];
+                    headers[y] += "\"" + rows[x][y] + "\"";
 
                 }
             }
