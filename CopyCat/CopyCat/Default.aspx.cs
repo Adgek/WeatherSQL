@@ -310,7 +310,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getPrecipitationForArea " + 103, 3);
+                rows = QueryExec(conn, "EXEC getPrecipitationForArea " + StateCode, 3);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
@@ -361,7 +361,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getCoolAndHeatForArea " + 103, 4);
+                rows = QueryExec(conn, "EXEC getCoolAndHeatForArea " + StateCode, 4);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
@@ -379,7 +379,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getTemperatureForArea " + 103, 5);
+                rows = QueryExec(conn, "EXEC getTemperatureForArea " + StateCode, 5);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
