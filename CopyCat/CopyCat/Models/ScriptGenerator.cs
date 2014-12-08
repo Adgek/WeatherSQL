@@ -11,14 +11,14 @@ namespace CopyCat.Models
     // a script to create the database
     public class ScriptGenerator
     {
-        public string GenerateMasterScript(Schema schema)
+        public List<string> GenerateMasterScript(Schema schema)
         {
-            string finalScript ="";
-            finalScript += ReadDbaseScript("SqlScripts.dbasesetup.creationscript.sql");
+            List<string> scripts =new List<string>();
+            scripts.Add(ReadDbaseScript("SqlScripts.dbasesetup.creationscript.sql"));
             Table weather = schema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
-            finalScript += Environment.NewLine + GenerateRowInserts(weather);
+            scripts.AddRange(GenerateRowInserts(weather));
 
-            return finalScript;
+            return scripts;
         }
 
         
@@ -36,13 +36,15 @@ namespace CopyCat.Models
             }
             return commandText;
         }
+        
 
-        private string GenerateRowInserts(Table t)
+        private List<string> GenerateRowInserts(Table t)
         {
-            string rows = "";
+            List<string> rows = new List<string>();
             string rowStart = "INSERT INTO " + t.Name + " (";
             List<string> cols = getColumnList(t);
             int count = 0;
+            string rowClump = "";
             foreach(string col in cols)
             {
                 rowStart += "["+col+"]";
@@ -51,12 +53,21 @@ namespace CopyCat.Models
                 count++;
             }
             rowStart += ") VALUES (";
-
+            int rowCount = 0;
             foreach(string row in t.Rows)
             {
-                rows += rowStart + row + ")" + Environment.NewLine;
-            }
+                rowClump += rowStart + row + ")" + Environment.NewLine;
+                rowCount++;
+                if (rowCount == 500)
+                {
+                    rows.Add(rowClump);
+                    rowClump = "";
+                    rowCount = 0;
+                }
 
+            }
+            if(rowCount != 0)
+                rows.Add(rowClump);
             return rows;
         }
 

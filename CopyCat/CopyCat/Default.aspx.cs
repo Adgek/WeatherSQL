@@ -21,8 +21,7 @@ namespace CopyCat
     public partial class _Default : Page
     {
         protected void Page_Load(object sender, EventArgs e)
-        {
-            System.Diagnostics.Trace.WriteLine("Program started!", "DeveloperLog");
+        {            
             gen = new ScriptGenerator();
             try
             {
@@ -30,10 +29,13 @@ namespace CopyCat
             }
             catch
             {
-
+                System.Diagnostics.Trace.WriteLine("No data to populate the area selector box with.", "DeveloperLog");
             }
-            
+
+            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
         }
+
+        static string databaseName = "WeatherDB" + DateTime.Now;
         static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
         private Schema sourceSchema;
         List<string[]> data = new List<string[]>();
@@ -51,11 +53,13 @@ namespace CopyCat
             {
                 try
                 {
+                    System.Diagnostics.Trace.WriteLine("Starting to read in the CSV file.", "DeveloperLog");
                     string filename = Path.GetFileName(FileUploadControl.FileName);
                     FileUploadControl.SaveAs(Server.MapPath("~/") + filename);
                     string fileContents = GetFileContents(FileUploadControl.PostedFile);
                     string[] importData = fileContents.Split(',');
                     ConvertDataToList(importData);
+                    System.Diagnostics.Trace.WriteLine("Finished reading in the CSV file.", "DeveloperLog");
                     StatusLabel.Text = "Upload status: File uploaded!";
                 }
                 catch (Exception ex)
@@ -104,10 +108,9 @@ namespace CopyCat
             return System.Text.Encoding.Default.GetString(Input).Replace('\n', ' ').Replace(" ", "");
         }
 
-        protected void UploadButton_Click(object sender, EventArgs e)
+        [WebMethod]
+        public void UploadButton_Click(object sender, EventArgs e)
         {
-            spinner.Attributes.Remove("hidden");
-            UploadButton.Enabled = false;
             ReadCSV();
             BuildSchema();
             ReadDataToSchema();
@@ -119,21 +122,28 @@ namespace CopyCat
                 conn.Open();
                 try
                 {
-                    NonQueryExec(conn, dropscript);
+                    NonQueryExec(conn, dropscript + DatabaseDealer.GetDBName());
+
+                    DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
                 }
                 catch(Exception ex)
                 {
+                    DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
+                    System.Diagnostics.Trace.WriteLine("Failed to drop the database.", "DeveloperLog");
                     System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
                 }
-                NonQueryExec(conn, createscript);
+                System.Diagnostics.Trace.WriteLine("Creating the database.", "DeveloperLog");
+                NonQueryExec(conn, createscript + DatabaseDealer.GetDBName());
+                System.Diagnostics.Trace.WriteLine("Successfully Created the database.", "DeveloperLog");
             }
 
-            string script = gen.GenerateMasterScript(sourceSchema);
-            
+            List<string> scripts = gen.GenerateMasterScript(sourceSchema);
+            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                NonQueryExec(conn, script);
+                foreach(string script in scripts)
+                    NonQueryExec(conn, script);
 
                 string procsscript;
                 for (int x = 1; x < 4; x++)
@@ -144,15 +154,13 @@ namespace CopyCat
                     NonQueryExec(conn,procsscript);
                 }
             }
-            spinner.Attributes.Add("hidden","hidden");
-            UploadButton.Enabled = true;
         }
 
         private static void NonQueryExec(SqlConnection conn, string script, int timeout=0)
         {
             SqlCommand cmd = new SqlCommand(script, conn);
             cmd.CommandType = CommandType.Text;
-            cmd.CommandTimeout = 0;
+            cmd.CommandTimeout = 120;
             cmd.ExecuteNonQuery();
         }
 

@@ -300,6 +300,8 @@
             GraphType = 3
             PageMethods.GetTemperatureData(StateSelection, TemperatureSuccess, Failure);
         }
+
+        
        
         function PrecipitationSuccess(result) {  
             var arr = JSON.parse(result);
@@ -467,13 +469,12 @@
             <br />
             <div class="row">                
                 <div class="col-md-3">
-                    <asp:Button runat="server" class="btn uploadBTN btn-default" ID="UploadButton" Text="Upload" OnClick="UploadButton_Click" />
+                    <asp:Button class="btn uploadBTN btn-default" runat="server" Text="Upload" ID="UploadButton" OnClick="UploadButton_Click"></asp:Button>
                 </div>
                 <div class="col-md-2">
                     <asp:Label runat="server"  ID="StatusLabel" Text="Upload status: " />
                 </div>
                 <div class="col-md-1">
-                    <div class="spinnerDiv" id="spinner" runat="server" ></div>
                 </div>
             </div>
 
@@ -481,29 +482,9 @@
 
     </div>
     <script>
-        var opts = {
-            lines: 17, // The number of lines to draw
-            length: 14, // The length of each line
-            width: 10, // The line thickness
-            radius: 0, // The radius of the inner circle
-            corners: 1, // Corner roundness (0..1)
-            rotate: 0, // The rotation offset
-            direction: 1, // 1: clockwise, -1: counterclockwise
-            color: '#000', // #rgb or #rrggbb or array of colors
-            speed: 1, // Rounds per second
-            trail: 60, // Afterglow percentage
-            shadow: false, // Whether to render a shadow
-            hwaccel: false, // Whether to use hardware acceleration
-            className: 'spinner', // The CSS class to assign to the spinner
-            zIndex: 2e9, // The z-index (defaults to 2000000000)
-            top: '50%', // Top position relative to parent
-            left: '50%' // Left position relative to parent
-        };
-        var target = document.getElementById('spinner');
-        var spinner = new Spinner(opts).spin(target);
+        
         $(".uploadBTN").click(function () {
-            $(".spinnerDiv").show();
-            $(".uploadBTN").disabled = true;
+
         });
     </script>
 </asp:Content>
