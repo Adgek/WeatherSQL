@@ -6,12 +6,15 @@
     <link href="Content/ChartStyles.css" rel="stylesheet" />
     <link href="Content/ion.rangeSlider.skinNice.css" rel="stylesheet" />
     <script>
-        var GraphTimeDescriptor = 1
+        var GraphTimeDescriptor = 1 //1 = year 2 = quart 3 = month
+        var GraphType = 1 //1 = prec 2 = cooling 3 = temp
         var StateSelection = "Manhattan"
         var MinimumYear = 1990
         var MaximumYear = 2015
+        var Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 
-        var OriginalChartXData = []
+        var OriginalChartXDataYears = []
+        var OriginalChartXDataMonths = []
         var OriginalChartYData = []
         var OriginalChartYData2 = []
         var OriginalChartYData3 = []
@@ -58,59 +61,181 @@
             ChartYData2 = []
             ChartYData3 = []
 
-            for (i = 0; i < OriginalChartXData.length; i++) {
-                if (OriginalChartXData[i] >= MinimumYear && OriginalChartXData[i] <= MaximumYear) {
-                    ChartXData.push(OriginalChartXData[i])
+            //for (i = 0; i < OriginalChartXDataYears.length; i++) {
+            //    if (OriginalChartXDataYears[i] >= MinimumYear && OriginalChartXDataYears[i] <= MaximumYear) {
+            //        ChartXData.push(OriginalChartXDataYears[i])
+            //        ChartYData.push(OriginalChartYData[i])
+            //        if (OriginalChartYData2.length > 0) {
+            //            ChartYData2.push(OriginalChartYData2[i])
+            //        }
+            //        if (OriginalChartYData3.length > 0) {
+            //            ChartYData3.push(OriginalChartYData3[i])
+            //        }
+            //    }
+            //}
+
+            if (GraphTimeDescriptor == 1) {
+                var year = new Object()
+                for (i = 0; i < OriginalChartXDataYears.length; i++) {
+                    if(!year.hasOwnProperty(OriginalChartXDataYears[i])){
+                        year[OriginalChartXDataYears[i]] = []
+                    }
+                    year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
+                }
+
+                for (var propt in year) {
+                    ChartXData.push(propt)
+
+                    var yearAverage = 0
+                    var valueCount = 0
+                    for (var value in year[propt]) {
+                        yearAverage += year[propt][value]
+                        valueCount += 1
+                    }
+                    yearAverage = yearAverage / valueCount
+
+                    ChartYData.push(yearAverage)
+                }
+
+                for (i = 0; i < year.length; i++) {
+                    ChartXData.push(OriginalChartXDataYears[i] + "-" + Months[OriginalChartXDataMonths[i] - 1])
                     ChartYData.push(OriginalChartYData[i])
                     if (OriginalChartYData2.length > 0) {
-                        ChartYData.push(OriginalChartYData2[i])
+                        ChartYData2.push(OriginalChartYData2[i])
                     }
                     if (OriginalChartYData3.length > 0) {
-                        ChartYData.push(OriginalChartYData3[i])
+                        ChartYData3.push(OriginalChartYData3[i])
                     }
+
+                }
+
+            }
+            if (GraphTimeDescriptor == 2) {
+
+            }
+            if (GraphTimeDescriptor == 3) {
+                for (i = 0; i < OriginalChartXDataYears.length; i++) {                    
+                    ChartXData.push(OriginalChartXDataYears[i] + "-" + Months[OriginalChartXDataMonths[i]-1])
+                    ChartYData.push(OriginalChartYData[i])
+                    if (OriginalChartYData2.length > 0) {
+                        ChartYData2.push(OriginalChartYData2[i])
+                    }
+                    if (OriginalChartYData3.length > 0) {
+                        ChartYData3.push(OriginalChartYData3[i])
+                    }
+                    
                 }
             }
-
-            lineChartData = {
-                labels: ChartXData,
-                datasets: [
-                    {
-                        label: "My Second dataset",
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(151,187,205,1)",
-                        data: ChartYData
-                    }
-                ]
+            
+            if (GraphType == 1) {
+                lineChartData = {
+                    labels: ChartXData,
+                    datasets: [
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData
+                        }
+                    ]
+                }
             }
+            if (GraphType == 2) {
+                lineChartData = {
+                    labels: ChartXData,
+                    datasets: [
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData
+                        },
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData2
+                        }
+                    ]
+                }
+            }
+            if (GraphType == 3) {
+                lineChartData = {
+                    labels: ChartXData,
+                    datasets: [
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData
+                        },
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData2
+                        },
+                        {
+                            label: "My Second dataset",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(151,187,205,1)",
+                            data: ChartYData3
+                        }
+                    ]
+                }
+            }            
         }
 
         function PrecipitationGraph() {
+            GraphType = 1
             PageMethods.GetPrecipitationData(StateSelection, PrecipitationSuccess, Failure);
         }
         function CoolingHeatingGraph() {
+            GraphType = 2
             PageMethods.GetCoolingHeatingDaysData(StateSelection, CoolingHeatingSuccess, Failure);
         }
         function TemperatureGraph() {
+            GraphType = 3
             PageMethods.GetTemperatureData(StateSelection, TemperatureSuccess, Failure);
         }
        
         function PrecipitationSuccess(result) {  
-            var str = "{ \"ValueX\": [1990, 1991, 1992, 1993], \"ValueY\": [1, 2, 4, 5] }"
-            var arr = JSON.parse(str);
+            var str = "{ \"Years\": [1990, 1990, 1990, 1990, 1991, 1991, 1992, 1993], \"Months\": [1, 2, 4, 5, 5,6,7,8], \"Precipitation\": [1, 2, 4, 5, 1, 2, 3,4] }"
+            var arr = JSON.parse(result);
             var i;
 
-            OriginalChartXData = []
+            OriginalChartXDataYears = []
+            OriginalChartXDataMonths = []
             OriginalChartYData = []
 
-            for (i = 0; i < arr.ValueX.length; i++) {   
-                if (arr.ValueX[i] >= MinimumYear && arr.ValueX[i] <= MaximumYear) {
-                    OriginalChartXData.push(arr.ValueX[i])
-                    OriginalChartYData.push(arr.ValueY[i])
-                }               
+            for (i = 0; i < arr.Years.length; i++) {
+                OriginalChartXDataYears.push(arr.Years[i])
+                OriginalChartXDataMonths.push(arr.Months[i])
+                OriginalChartYData.push(arr.Precipitation[i])                              
             }           
 
             DrawGraph()
@@ -187,9 +312,9 @@
         </div>
         <div class="col-md-4">
             <div class="btn-group" role="group" aria-label="...">
-              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='1'">Yearly</button>
-              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='2'">Quarterly</button>
-              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='3'">Monthly</button>
+              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='1';DrawGraph()">Yearly</button>
+              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='2';DrawGraph()">Quarterly</button>
+              <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='3';DrawGraph()">Monthly</button>
             </div>
         </div>
         <div class="col-md-4">        
@@ -254,12 +379,14 @@
                     MinimumYear = res[0]
                     MaximumYear = res[1]
 
-                    var maxYear = Math.max.apply(Math, OriginalChartXData);
-                    var minYear = Math.min.apply(Math, OriginalChartXData);
+                    var maxYear = Math.max.apply(Math, OriginalChartXDataYears);
+                    var minYear = Math.min.apply(Math, OriginalChartXDataYears);
 
-                    if (MinimumYear >= minYear && MinimumYear <= maxYear && MaximumYear >= minYear && MaximumYear <= maxYear) {
+                    if(minYear <= MinimumYear && minYear <= MaximumYear && maxYear >= MinimumYear && maxYear <= MaximumYear){
                         DrawGraph()
                     }
+
+                    //if (MinimumYear >= minYear && MinimumYear <= maxYear && MaximumYear >= minYear && MaximumYear <= maxYear) 
                     
                 });
 			</script>
