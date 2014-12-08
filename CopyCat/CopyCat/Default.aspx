@@ -89,7 +89,7 @@
                     var yearAverage = 0
                     var valueCount = 0
                     for (var value in year[propt]) {
-                        yearAverage += year[propt][value]
+                        yearAverage += parseInt(year[propt][value])
                         valueCount += 1
                     }
                     yearAverage = yearAverage / valueCount
@@ -224,7 +224,6 @@
         }
        
         function PrecipitationSuccess(result) {  
-            var str = "{ \"Years\": [1990, 1990, 1990, 1990, 1991, 1991, 1992, 1993], \"Months\": [1, 2, 4, 5, 5,6,7,8], \"Precipitation\": [1, 2, 4, 5, 1, 2, 3,4] }"
             var arr = JSON.parse(result);
             var i;
 
@@ -232,17 +231,31 @@
             OriginalChartXDataMonths = []
             OriginalChartYData = []
 
-            for (i = 0; i < arr.Years.length; i++) {
-                OriginalChartXDataYears.push(arr.Years[i])
-                OriginalChartXDataMonths.push(arr.Months[i])
-                OriginalChartYData.push(arr.Precipitation[i])                              
+            for (i = 0; i < arr.year.length; i++) {
+                OriginalChartXDataYears.push(arr.year[i])
+                OriginalChartXDataMonths.push(arr.month[i])
+                OriginalChartYData.push(arr.pcp[i])                              
             }           
 
             DrawGraph()
         }
 
         function CoolingHeatingSuccess(result) {
-            
+            var arr = JSON.parse(result);
+            var i;
+
+            OriginalChartXDataYears = []
+            OriginalChartXDataMonths = []
+            OriginalChartYData = []
+            OriginalChartYData2 = []
+
+            for (i = 0; i < arr.year.length; i++) {
+                OriginalChartXDataYears.push(arr.year[i])
+                OriginalChartXDataMonths.push(arr.month[i])
+                OriginalChartYData.push(arr.cdd[i])
+                OriginalChartYData.push(arr.hdd[i])
+            }
+
             DrawGraph()
         }
 
@@ -289,13 +302,9 @@
                     <asp:Label runat="server" ID="StatusLabel" Text="Upload status: " />
                 </div>
             </div>
-
         </div>
-
     </div>
-
     <br />
-
     <div class="row">
         <div class="col-md-4">
             <div class="dropdown">
@@ -352,9 +361,6 @@
         </div>
     </div>
     
-
-    
-
     <div class="jumbotron">
 		<div>
 			<canvas id="canvas" height="450" width="800"></canvas>
