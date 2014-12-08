@@ -61,40 +61,61 @@
             ChartYData2 = []
             ChartYData3 = []
 
-            //for (i = 0; i < OriginalChartXDataYears.length; i++) {
-            //    if (OriginalChartXDataYears[i] >= MinimumYear && OriginalChartXDataYears[i] <= MaximumYear) {
-            //        ChartXData.push(OriginalChartXDataYears[i])
-            //        ChartYData.push(OriginalChartYData[i])
-            //        if (OriginalChartYData2.length > 0) {
-            //            ChartYData2.push(OriginalChartYData2[i])
-            //        }
-            //        if (OriginalChartYData3.length > 0) {
-            //            ChartYData3.push(OriginalChartYData3[i])
-            //        }
-            //    }
-            //}
-
             if (GraphTimeDescriptor == 1) {
                 var year = new Object()
                 for (i = 0; i < OriginalChartXDataYears.length; i++) {
                     if(!year.hasOwnProperty(OriginalChartXDataYears[i])){
                         year[OriginalChartXDataYears[i]] = []
+                        if (OriginalChartYData2.length > 0) {
+                            year[OriginalChartXDataYears[i] + "/2"] = []
+                        }
+                        if (OriginalChartYData3.length > 0) {
+                            year[OriginalChartXDataYears[i] + "/3"] = []
+                        }
                     }
                     year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
-                }
+
+                    if (OriginalChartYData2.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/2"].push(OriginalChartYData2[i])
+                    }
+                    if (OriginalChartYData3.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/3"].push(OriginalChartYData3[i])
+                    }
+                };
 
                 for (var propt in year) {
-                    ChartXData.push(propt)
-
                     var yearAverage = 0
                     var valueCount = 0
-                    for (var value in year[propt]) {
-                        yearAverage += parseInt(year[propt][value])
-                        valueCount += 1
-                    }
-                    yearAverage = yearAverage / valueCount
 
-                    ChartYData.push(yearAverage)
+                    if (propt.indexOf("/2") > -1) {
+                        for (var value in year[propt]) {
+                            yearAverage += parseInt(year[propt][value])
+                            valueCount += 1
+                        }
+                        yearAverage = yearAverage / valueCount
+
+                        ChartYData2.push(yearAverage)
+                    }
+                    else if (propt.indexOf("/3") > -1) {
+                        for (var value in year[propt]) {
+                            yearAverage += parseInt(year[propt][value])
+                            valueCount += 1
+                        }
+                        yearAverage = yearAverage / valueCount
+
+                        ChartYData3.push(yearAverage)
+                    }
+                    else {
+                        ChartXData.push(propt)
+                       
+                        for (var value in year[propt]) {
+                            yearAverage += parseInt(year[propt][value])
+                            valueCount += 1
+                        }
+                        yearAverage = yearAverage / valueCount
+
+                        ChartYData.push(yearAverage)
+                    }                    
                 }
 
                 for (i = 0; i < year.length; i++) {
@@ -106,13 +127,48 @@
                     if (OriginalChartYData3.length > 0) {
                         ChartYData3.push(OriginalChartYData3[i])
                     }
+                }
+            }
 
+            if (GraphTimeDescriptor == 2) {
+                var year = new Object()
+                for (i = 0; i < OriginalChartXDataYears.length; i++) {
+                    if (!year.hasOwnProperty(OriginalChartXDataYears[i])) {
+                        year[OriginalChartXDataYears[i]] = []
+                        if (OriginalChartYData2.length > 0) {
+                            year[OriginalChartXDataYears[i] + "/2"] = []
+                        }
+                        if (OriginalChartYData3.length > 0) {
+                            year[OriginalChartXDataYears[i] + "/3"] = []
+                        }
+                    }
+                    year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
+
+                    if (OriginalChartYData2.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/2"].push(OriginalChartYData2[i])
+                    }
+                    if (OriginalChartYData3.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/3"].push(OriginalChartYData3[i])
+                    }
+                };
+
+                for (var propt in year) {
+                    var yearAverage = 0
+                    var valueCount = 0
+
+                    if (propt.indexOf("/2") > -1) {
+                        
+                    }
+                    else if (propt.indexOf("/3") > -1) {
+                        
+                    }
+                    else {
+                       
+                    }
                 }
 
             }
-            if (GraphTimeDescriptor == 2) {
 
-            }
             if (GraphTimeDescriptor == 3) {
                 for (i = 0; i < OriginalChartXDataYears.length; i++) {                    
                     ChartXData.push(OriginalChartXDataYears[i] + "-" + Months[OriginalChartXDataMonths[i]-1])
@@ -122,8 +178,7 @@
                     }
                     if (OriginalChartYData3.length > 0) {
                         ChartYData3.push(OriginalChartYData3[i])
-                    }
-                    
+                    }                    
                 }
             }
             
@@ -160,9 +215,9 @@
                         },
                         {
                             label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
+                            fillColor: "rgba(200,0,0,0.2)",
+                            strokeColor: "rgba(200,0,0,1)",
+                            pointColor: "rgba(200,0,0,1)",
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
@@ -187,9 +242,9 @@
                         },
                         {
                             label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
+                            fillColor: "rgba(200,0,0,0.2)",
+                            strokeColor: "rgba(200,0,0,1)",
+                            pointColor: "rgba(200,0,0,1)",
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
@@ -197,9 +252,9 @@
                         },
                         {
                             label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
+                            fillColor: "rgba(0,200,0,0.2)",
+                            strokeColor: "rgba(0,200,0,1)",
+                            pointColor: "rgba(0,200,0,1)",
                             pointStrokeColor: "#fff",
                             pointHighlightFill: "#fff",
                             pointHighlightStroke: "rgba(151,187,205,1)",
@@ -253,14 +308,30 @@
                 OriginalChartXDataYears.push(arr.year[i])
                 OriginalChartXDataMonths.push(arr.month[i])
                 OriginalChartYData.push(arr.cdd[i])
-                OriginalChartYData.push(arr.hdd[i])
+                OriginalChartYData2.push(arr.hdd[i])
             }
 
             DrawGraph()
         }
 
         function TemperatureSuccess(result) {
-           
+            var arr = JSON.parse(result);
+            var i;
+
+            OriginalChartXDataYears = []
+            OriginalChartXDataMonths = []
+            OriginalChartYData = []
+            OriginalChartYData2 = []
+            OriginalChartYData3 = []
+
+            for (i = 0; i < arr.year.length; i++) {
+                OriginalChartXDataYears.push(arr.year[i])
+                OriginalChartXDataMonths.push(arr.month[i])
+                OriginalChartYData.push(arr.tmin[i])
+                OriginalChartYData2.push(arr.tmax[i])
+                OriginalChartYData3.push(arr.tavg[i])
+            }
+
             DrawGraph()
         }
 
