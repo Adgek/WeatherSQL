@@ -270,41 +270,11 @@
 	</script>
 
     <!------------------------- Initial Form ------->
-    
-    <div id="dbFormArea" runat="server">
-        <div>  
-            <asp:Button ID="Button1" runat="server" Text="Get Name" OnClientClick='GetName();return false;' />
-        </div>
-        <div id="dbForm" runat="server">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1><span style="font-size: large">Local DB</span></h1>
-                    <hr />
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <asp:FileUpload ID="FileUploadControl" runat="server" />
-                </div>
-                <div class="col-md-4">
-                    
-                </div>
-                <div class="col-md-6">
-                </div>
-            </div>
-            <br />
-            <br />
-            <div class="row">                
-                <div class="col-md-3">
-                    <asp:Button runat="server" ID="UploadButton" Text="Upload" OnClick="UploadButton_Click" />
-                </div>
-                <div class="col-md-9">
-                    <asp:Label runat="server" ID="StatusLabel" Text="Upload status: " />
-                </div>
-            </div>
-        </div>
-    </div>
+
     <br />
+
+    <br />
+
     <div class="row">
         <div class="col-md-4">
             <div class="dropdown">
@@ -332,30 +302,8 @@
                 Area Selection
                 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenuGraphSelection">
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="StateSelection='New York'">Precipitation</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
+                <ul class="dropdown-menu scrollable-menu" role="menu" runat="server" id="stateDropDown">
+                    
                 </ul>
             </div>
         </div>
@@ -397,6 +345,39 @@
                 });
 			</script>
 		</div>
+    </div>
+
+    <div id="dbFormArea" runat="server">
+        <div id="dbForm" runat="server">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1><span style="font-size: large">Upload Data</span></h1>
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <asp:FileUpload ID="FileUploadControl" runat="server" />
+                </div>
+                <div class="col-md-4">
+                    
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="row">                
+                <div class="col-md-3">
+                    <asp:Button runat="server" ID="UploadButton" Text="Upload" OnClick="UploadButton_Click" />
+                </div>
+                <div class="col-md-9">
+                    <asp:Label runat="server" ID="StatusLabel" Text="Upload status: " />
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 </asp:Content>
