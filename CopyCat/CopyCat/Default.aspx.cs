@@ -24,12 +24,10 @@ namespace CopyCat
         {
             System.Diagnostics.Trace.WriteLine("Program started!", "DeveloperLog");
             gen = new ScriptGenerator();
+            fillInStateDropdown();
         }
         static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
         private Schema sourceSchema;
-        private Schema destSchema;
-
-        private string[] importData;
         List<string[]> data = new List<string[]>();
 
         private ScriptGenerator gen;
@@ -351,13 +349,13 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getPrecipitationForArea " + 103, 3);
+                rows = QueryExec(conn, "EXEC getCoolAndHeatForArea " + 103, 3);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
             headers.Add("year");
-            headers.Add("pcp");
-
+            headers.Add("cdd");
+            headers.Add("hdd");
 
             return GetJsonOutput(rows, headers);
         }
@@ -365,11 +363,35 @@ namespace CopyCat
         [WebMethod]
         public static string GetTemperatureData(string StateCode)
         {
-            //connect to database
-            //call precipitation procedure
-            //put data in a readable format
-            return "Hello";
+            List<List<string>> rows = new List<List<string>>();
+            using (SqlConnection conn = new SqlConnection(conString2))
+            {
+                conn.Open();
+                rows = QueryExec(conn, "EXEC getTemperatureForArea " + 103, 3);
+            }
+            List<string> headers = new List<string>();
+            headers.Add("month");
+            headers.Add("year");
+            headers.Add("tmin");
+            headers.Add("tmax");
+            headers.Add("tavg");
+
+            return GetJsonOutput(rows, headers);
         }
 
+        private void fillInStateDropdown()
+        {
+            List<List<string>> rows = new List<List<string>>();
+            using (SqlConnection conn = new SqlConnection(conString2))
+            {
+                conn.Open();
+                rows = QueryExec(conn, "SELECT statecode,statename FROM [State]", 2);
+            }
+            foreach(List<string> row in rows)
+            {
+                stateDropDown.InnerHtml += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#\" onclick=\"StateSelection='" + row[0] + "'\">" + row[1] + "</a></li>";
+            }
+
+        }
     }
 }
