@@ -9,8 +9,13 @@
         var GraphTimeDescriptor = 1 //1 = year 2 = quart 3 = month
         var GraphType = 1 //1 = prec 2 = cooling 3 = temp
         var StateSelection = 1;
-        var MinimumYear = 1990
-        var MaximumYear = 2015
+
+        var ScrollBarMinimumYear = 1990
+        var ScrollBarMaximumYear = 2015
+        
+        var minGraphYear = 1990
+        var maxGraphYear = 2200
+
         var Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 
         var OriginalChartXDataYears = []
@@ -22,8 +27,8 @@
         var ChartXData = []
         var ChartYData = []
         var ChartYData2 = []
-        var ChartYData3 = []
-       
+        var ChartYData3 = []      
+
         var lineChartData = {
             labels: ChartXData,
             datasets: [
@@ -48,8 +53,8 @@
         }
 
         function DrawGraph() {
-            UpdateGraph()
-            $("#canvas").replaceWith("<canvas id=\"canvas\" height=\"450\" width=\"800\"></canvas>");
+            GenerateGraph()
+            $("#canvas").replaceWith("<canvas id=\"canvas\" height=\"450\" width=\"1000\"></canvas>");
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myLine = new Chart(ctx).Line(lineChartData, {});
         }
@@ -76,7 +81,33 @@
 
         });
 
-        function UpdateGraph() {
+        function SetOriginalData() {
+            var year = new Object()
+            for (i = 0; i < OriginalChartXDataYears.length; i++) {
+                if (!year.hasOwnProperty(OriginalChartXDataYears[i])) {
+                    year[OriginalChartXDataYears[i]] = []
+                    if (OriginalChartYData2.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/2"] = []
+                    }
+                    if (OriginalChartYData3.length > 0) {
+                        year[OriginalChartXDataYears[i] + "/3"] = []
+                    }
+                }
+                year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
+
+                if (OriginalChartYData2.length > 0) {
+                    year[OriginalChartXDataYears[i] + "/2"].push(OriginalChartYData2[i])
+                }
+                if (OriginalChartYData3.length > 0) {
+                    year[OriginalChartXDataYears[i] + "/3"].push(OriginalChartYData3[i])
+                }
+            };
+
+            return year
+        }
+
+        function GenerateGraph() {           
+
             var i = 0
 
             ChartXData = []
@@ -85,26 +116,7 @@
             ChartYData3 = []
 
             if (GraphTimeDescriptor == 1) {
-                var year = new Object()
-                for (i = 0; i < OriginalChartXDataYears.length; i++) {
-                    if(!year.hasOwnProperty(OriginalChartXDataYears[i])){
-                        year[OriginalChartXDataYears[i]] = []
-                        if (OriginalChartYData2.length > 0) {
-                            year[OriginalChartXDataYears[i] + "/2"] = []
-                        }
-                        if (OriginalChartYData3.length > 0) {
-                            year[OriginalChartXDataYears[i] + "/3"] = []
-                        }
-                    }
-                    year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
-
-                    if (OriginalChartYData2.length > 0) {
-                        year[OriginalChartXDataYears[i] + "/2"].push(OriginalChartYData2[i])
-                    }
-                    if (OriginalChartYData3.length > 0) {
-                        year[OriginalChartXDataYears[i] + "/3"].push(OriginalChartYData3[i])
-                    }
-                };
+                var year = SetOriginalData()
 
                 for (var propt in year) {
                     var yearAverage = 0
@@ -112,7 +124,7 @@
 
                     if (propt.indexOf("/2") > -1) {
                         for (var value in year[propt]) {
-                            yearAverage += parseInt(year[propt][value])
+                            yearAverage += parseFloat(year[propt][value])
                             valueCount += 1
                         }
                         yearAverage = yearAverage / valueCount
@@ -121,7 +133,7 @@
                     }
                     else if (propt.indexOf("/3") > -1) {
                         for (var value in year[propt]) {
-                            yearAverage += parseInt(year[propt][value])
+                            yearAverage += parseFloat(year[propt][value])
                             valueCount += 1
                         }
                         yearAverage = yearAverage / valueCount
@@ -132,64 +144,44 @@
                         ChartXData.push(propt)
                        
                         for (var value in year[propt]) {
-                            yearAverage += parseInt(year[propt][value])
+                            yearAverage += parseFloat(year[propt][value])
                             valueCount += 1
                         }
                         yearAverage = yearAverage / valueCount
 
                         ChartYData.push(yearAverage)
                     }                    
-                }
-
-                for (i = 0; i < year.length; i++) {
-                    ChartXData.push(OriginalChartXDataYears[i] + "-" + Months[OriginalChartXDataMonths[i] - 1])
-                    ChartYData.push(OriginalChartYData[i])
-                    if (OriginalChartYData2.length > 0) {
-                        ChartYData2.push(OriginalChartYData2[i])
-                    }
-                    if (OriginalChartYData3.length > 0) {
-                        ChartYData3.push(OriginalChartYData3[i])
-                    }
-                }
+                }           
             }
 
             if (GraphTimeDescriptor == 2) {
-                var year = new Object()
-                for (i = 0; i < OriginalChartXDataYears.length; i++) {
-                    if (!year.hasOwnProperty(OriginalChartXDataYears[i])) {
-                        year[OriginalChartXDataYears[i]] = []
-                        if (OriginalChartYData2.length > 0) {
-                            year[OriginalChartXDataYears[i] + "/2"] = []
-                        }
-                        if (OriginalChartYData3.length > 0) {
-                            year[OriginalChartXDataYears[i] + "/3"] = []
-                        }
-                    }
-                    year[OriginalChartXDataYears[i]].push(OriginalChartYData[i])
+                var year = SetOriginalData()
 
-                    if (OriginalChartYData2.length > 0) {
-                        year[OriginalChartXDataYears[i] + "/2"].push(OriginalChartYData2[i])
-                    }
-                    if (OriginalChartYData3.length > 0) {
-                        year[OriginalChartXDataYears[i] + "/3"].push(OriginalChartYData3[i])
-                    }
-                };
-
-                for (var propt in year) {
-                    var yearAverage = 0
-                    var valueCount = 0
+                for (var propt in year) {                        
+                    var q1 = (parseFloat(year[propt][0]) + parseFloat(year[propt][1]) + parseFloat(year[propt][2])) / 3
+                    var q2 = (parseFloat(year[propt][3]) + parseFloat(year[propt][4]) + parseFloat(year[propt][5])) / 3
+                    var q3 = (parseFloat(year[propt][6]) + parseFloat(year[propt][7]) + parseFloat(year[propt][8])) / 3
+                    var q4 = (parseFloat(year[propt][9]) + parseFloat(year[propt][10]) + parseFloat(year[propt][11])) / 3
 
                     if (propt.indexOf("/2") > -1) {
-                        
+                        if (!isNaN(q1)) { ChartYData2.push(q1) }
+                        if (!isNaN(q2)) { ChartYData2.push(q2) }
+                        if (!isNaN(q3)) { ChartYData2.push(q3) }
+                        if (!isNaN(q4)) { ChartYData2.push(q4) }
                     }
                     else if (propt.indexOf("/3") > -1) {
-                        
+                        if (!isNaN(q1)) { ChartYData3.push(q1) }
+                        if (!isNaN(q2)) { ChartYData3.push(q2) }
+                        if (!isNaN(q3)) { ChartYData3.push(q3) }
+                        if (!isNaN(q4)) { ChartYData3.push(q4) }
                     }
-                    else {
-                       
+                    else {      
+                        if (!isNaN(q1)) { ChartXData.push(propt + " Q1"); ChartYData.push(q1) }
+                        if (!isNaN(q2)) { ChartXData.push("Q2"); ChartYData.push(q2) }
+                        if (!isNaN(q3)) { ChartXData.push("Q3"); ChartYData.push(q3) }
+                        if (!isNaN(q4)) { ChartXData.push("Q4"); ChartYData.push(q4) }                   
                     }
                 }
-
             }
 
             if (GraphTimeDescriptor == 3) {
@@ -205,86 +197,113 @@
                 }
             }
             
-            if (GraphType == 1) {
-                lineChartData = {
-                    labels: ChartXData,
-                    datasets: [
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData
+            var tempXData = []
+            var tempYData = []
+            var tempYData2 = []
+            var tempYData3 = []
+
+            for (var i = 0; i < ChartXData.length; i++) {
+                var currentYear = parseInt(ChartXData[i].substring(0, 4))
+                var quarter = ChartXData[i].indexOf("Q")
+
+                if (currentYear >= ScrollBarMinimumYear && currentYear <= ScrollBarMaximumYear) {
+                    tempXData.push(ChartXData[i])
+                    tempYData.push(ChartYData[i])
+
+                    if (ChartYData2.length > 0) {
+                        tempYData2.push(ChartYData2[i])
+                    }                    
+                    if (ChartYData3.length > 0) {
+                        tempYData3.push(ChartYData3[i])
+                    }
+
+                    if (quarter > -1) {
+                        tempXData.push(ChartXData[i + 1])
+                        tempXData.push(ChartXData[i + 2])
+                        tempXData.push(ChartXData[i + 3])
+
+                        tempYData.push(ChartYData[i + 1])
+                        tempYData.push(ChartYData[i + 2])
+                        tempYData.push(ChartYData[i + 3])
+
+                        if (ChartYData2.length > 0) {
+                            tempYData2.push(ChartYData2[i + 1])
+                            tempYData2.push(ChartYData2[i + 2])
+                            tempYData2.push(ChartYData2[i + 3])
                         }
-                    ]
-                }
+                        if (ChartYData3.length > 0) {
+                            tempYData3.push(ChartYData3[i + 1])
+                            tempYData3.push(ChartYData3[i + 2])
+                            tempYData3.push(ChartYData3[i + 3])
+                        }
+
+                        i += 3
+                    }
+                }                
             }
+
+            ChartXData = tempXData
+            ChartYData = tempYData
+            ChartYData2 = tempYData2
+            ChartYData3 = tempYData3
+            // crop the chart data
+
+            //check for type of graph
+
+            //yearly - crop ends
+
+            //monthly - search x value for year string
+
+            //quarterly look for year then take next 3
+
+            lineChartData = {
+                labels: ChartXData,
+                datasets: [
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: ChartYData
+                    }
+                ]
+            }           
             if (GraphType == 2) {
-                lineChartData = {
-                    labels: ChartXData,
-                    datasets: [
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData
-                        },
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(200,0,0,0.2)",
-                            strokeColor: "rgba(200,0,0,1)",
-                            pointColor: "rgba(200,0,0,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData2
-                        }
-                    ]
-                }
+                lineChartData["datasets"].push({
+                    label: "My Second dataset",
+                    fillColor: "rgba(200,0,0,0.2)",
+                    strokeColor: "rgba(200,0,0,1)",
+                    pointColor: "rgba(200,0,0,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: ChartYData2
+                })
             }
             if (GraphType == 3) {
-                lineChartData = {
-                    labels: ChartXData,
-                    datasets: [
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "rgba(151,187,205,1)",
-                            pointColor: "rgba(151,187,205,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData
-                        },
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(200,0,0,0.2)",
-                            strokeColor: "rgba(200,0,0,1)",
-                            pointColor: "rgba(200,0,0,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData2
-                        },
-                        {
-                            label: "My Second dataset",
-                            fillColor: "rgba(0,200,0,0.2)",
-                            strokeColor: "rgba(0,200,0,1)",
-                            pointColor: "rgba(0,200,0,1)",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: ChartYData3
-                        }
-                    ]
-                }
+                lineChartData["datasets"].push({
+                    label: "My Second dataset",
+                    fillColor: "rgba(200,0,0,0.2)",
+                    strokeColor: "rgba(200,0,0,1)",
+                    pointColor: "rgba(200,0,0,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: ChartYData2
+                })
+                lineChartData["datasets"].push({
+                    label: "My Second dataset",
+                    fillColor: "rgba(0,200,0,0.2)",
+                    strokeColor: "rgba(0,200,0,1)",
+                    pointColor: "rgba(0,200,0,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(151,187,205,1)",
+                    data: ChartYData3
+                })               
             }            
         }
 
@@ -292,28 +311,38 @@
             GraphType = 1
             PageMethods.GetPrecipitationData(StateSelection, PrecipitationSuccess, Failure);
         }
+
         function CoolingHeatingGraph() {
             GraphType = 2
             PageMethods.GetCoolingHeatingDaysData(StateSelection, CoolingHeatingSuccess, Failure);
         }
+
         function TemperatureGraph() {
             GraphType = 3
             PageMethods.GetTemperatureData(StateSelection, TemperatureSuccess, Failure);
         }
-       
-        function PrecipitationSuccess(result) {  
-            var arr = JSON.parse(result);
-            var i;
 
+        function ClearOriginalData() {
             OriginalChartXDataYears = []
             OriginalChartXDataMonths = []
             OriginalChartYData = []
+            OriginalChartYData2 = []
+            OriginalChartYData3 = []
+        }
+
+        function PrecipitationSuccess(result) {  
+            var arr = JSON.parse(result);
+            var i;
+            
+            ClearOriginalData()
 
             for (i = 0; i < arr.year.length; i++) {
                 OriginalChartXDataYears.push(arr.year[i])
                 OriginalChartXDataMonths.push(arr.month[i])
                 OriginalChartYData.push(arr.pcp[i])                              
-            }           
+            }
+
+            UpdateSlider()
 
             DrawGraph()
         }
@@ -322,10 +351,7 @@
             var arr = JSON.parse(result);
             var i;
 
-            OriginalChartXDataYears = []
-            OriginalChartXDataMonths = []
-            OriginalChartYData = []
-            OriginalChartYData2 = []
+            ClearOriginalData()
 
             for (i = 0; i < arr.year.length; i++) {
                 OriginalChartXDataYears.push(arr.year[i])
@@ -333,6 +359,7 @@
                 OriginalChartYData.push(arr.cdd[i])
                 OriginalChartYData2.push(arr.hdd[i])
             }
+            UpdateSlider()
 
             DrawGraph()
         }
@@ -341,11 +368,7 @@
             var arr = JSON.parse(result);
             var i;
 
-            OriginalChartXDataYears = []
-            OriginalChartXDataMonths = []
-            OriginalChartYData = []
-            OriginalChartYData2 = []
-            OriginalChartYData3 = []
+            ClearOriginalData()
 
             for (i = 0; i < arr.year.length; i++) {
                 OriginalChartXDataYears.push(arr.year[i])
@@ -355,11 +378,44 @@
                 OriginalChartYData3.push(arr.tavg[i])
             }
 
+            UpdateSlider()
+
             DrawGraph()
         }
 
         function Failure(error) {
             alert(error);
+        }
+
+        function UpdateSlider() {         
+            var slider = $("#XValueSlider").data("ionRangeSlider");
+
+            // Call sliders update method with any params
+            slider.update({
+                type: "double",
+                grid: true,
+                min: minGraphYear,
+                max: maxGraphYear,
+                from: minGraphYear,
+                to: maxGraphYear
+            });
+        }
+
+        function UpdateSlider() {
+            maxGraphYear = Math.max.apply(Math, OriginalChartXDataYears);
+            minGraphYear = Math.min.apply(Math, OriginalChartXDataYears);
+
+            var slider = $("#XValueSlider").data("ionRangeSlider")
+            slider.destroy()
+            // Call sliders update method with any params
+            $("#XValueSlider").ionRangeSlider({
+                type: "double",
+                grid: true,
+                min: minGraphYear,
+                max: maxGraphYear,
+                from: minGraphYear,
+                to: maxGraphYear
+            });
         }
 	</script>
 
@@ -409,36 +465,32 @@
 
     <div class="jumbotron">
 		<div>
-			<canvas id="canvas" height="450" width="800"></canvas>
+			<canvas id="canvas" height="450" width="1000"></canvas>
 			<br />
-			<input type="text" id="example_id" name="example_name" value="" />
+			<input type="text" id="XValueSlider" name="XValueSlider" value="" />
 			<label id="leftVal"></label><label id="rightVal"></label>
             <script>
-                $("#example_id").ionRangeSlider({
+                $("#XValueSlider").ionRangeSlider({
                     type: "double",
                     grid: true,
-                    min: 1990,
-                    max: 2015,
-                    from: 200,
-                    to: 800
+                    min: minGraphYear,
+                    max: maxGraphYear,
+                    from: minGraphYear,
+                    to: maxGraphYear
                 });
 
-                $("#example_id").on("change", function () {
+
+                $("#XValueSlider").on("change", function () {
                     var $this = $(this),
 						value = $this.prop("value");
 
                     var res = value.split(";")
-                    MinimumYear = res[0]
-                    MaximumYear = res[1]
+                    ScrollBarMinimumYear = res[0]
+                    ScrollBarMaximumYear = res[1]                    
 
-                    var maxYear = Math.max.apply(Math, OriginalChartXDataYears);
-                    var minYear = Math.min.apply(Math, OriginalChartXDataYears);
-
-                    if(minYear <= MinimumYear && minYear <= MaximumYear && maxYear >= MinimumYear && maxYear <= MaximumYear){
+                    //if (ScrollBarMinimumYear >= minGraphYear && ScrollBarMinimumYear <= maxGraphYear || ScrollBarMaximumYear >= minGraphYear && ScrollBarMaximumYear <= maxGraphYear) {
                         DrawGraph()
-                    }
-
-                    //if (MinimumYear >= minYear && MinimumYear <= maxYear && MaximumYear >= minYear && MaximumYear <= maxYear) 
+                    //}
                     
                 });
 			</script>
