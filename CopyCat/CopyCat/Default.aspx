@@ -8,7 +8,7 @@
     <script>
         var GraphTimeDescriptor = 1 //1 = year 2 = quart 3 = month
         var GraphType = 1 //1 = prec 2 = cooling 3 = temp
-        var StateSelection = "Manhattan"
+        var StateSelection = 1;
         var MinimumYear = 1990
         var MaximumYear = 2015
         var Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
@@ -44,6 +44,7 @@
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myLine = new Chart(ctx).Line(lineChartData, {
             });
+            $("#spinner").hide();
         }
 
         function DrawGraph() {
@@ -52,6 +53,28 @@
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myLine = new Chart(ctx).Line(lineChartData, {});
         }
+
+        
+
+        $(function () {
+
+            $(".graphSelection li a").click(function () {
+
+                $(".graphSelectionBtn").html($(this).text() + " <span class=\"caret\"></span>");
+                $(".graphSelectionBtn").val($(this).text() + " <span class=\"caret\"></span>");
+            });
+
+        });
+
+        $(function () {
+
+            $(".areaSelection li a").click(function () {
+
+                $(".AreaSelection").html($(this).text() + " <span class=\"caret\"></span>");
+                $(".AreaSelection").val($(this).text() + " <span class=\"caret\"></span>");
+            });
+
+        });
 
         function UpdateGraph() {
             var i = 0
@@ -262,12 +285,14 @@
     <br />
     <div class="row">
         <div class="col-md-4">
+            <label>Graph Type: </label>
+            <br/>    
             <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="GraphSelection" data-toggle="dropdown" aria-expanded="true">
+                <button class="btn btn-default graphSelectionBtn dropdown-toggle" type="button" id="GraphSelection" data-toggle="dropdown" aria-expanded="true">
                 Graphs
                 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuGraphSelection">
+                <ul class="dropdown-menu graphSelection" role="menu" aria-labelledby="dropdownMenuGraphSelection">
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:PrecipitationGraph();">Precipitation</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:CoolingHeatingGraph();">Cooling days/Heating days</a></li>
                     <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:TemperatureGraph();">Temperature</a></li>
@@ -281,19 +306,20 @@
               <button type="button" class="btn btn-default" onclick="GraphTimeDescriptor='3';DrawGraph()">Monthly</button>
             </div>
         </div>
-        <div class="col-md-4">        
+        <div class="col-md-4"> 
+            <label>Area: </label>
+            <br />       
             <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="AreaSelection" data-toggle="dropdown" aria-expanded="true">
-                Area Selection
+                <button class="btn btn-default  AreaSelection dropdown-toggle" type="button" id="AreaSelection" runat="Server" data-toggle="dropdown" aria-expanded="true">
+                Alabama
                 <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu scrollable-menu" role="menu" runat="server" id="stateDropDown">
+                <ul class="dropdown-menu areaSelection scrollable-menu" role="menu" runat="server" id="stateDropDown">
                     
                 </ul>
             </div>
         </div>
     </div>
-    
 
     
 
@@ -345,7 +371,7 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
-                    <asp:FileUpload ID="FileUploadControl" runat="server" />
+                    <asp:FileUpload class="btn btn-default" ID="FileUploadControl" runat="server" />
                 </div>
                 <div class="col-md-4">
                     
@@ -357,15 +383,43 @@
             <br />
             <div class="row">                
                 <div class="col-md-3">
-                    <asp:Button runat="server" ID="UploadButton" Text="Upload" OnClick="UploadButton_Click" />
+                    <asp:Button runat="server" class="btn uploadBTN btn-default" ID="UploadButton" Text="Upload" OnClick="UploadButton_Click" />
                 </div>
-                <div class="col-md-9">
-                    <asp:Label runat="server" ID="StatusLabel" Text="Upload status: " />
+                <div class="col-md-2">
+                    <asp:Label runat="server"  ID="StatusLabel" Text="Upload status: " />
+                </div>
+                <div class="col-md-1">
+                    <div class="spinnerDiv" id="spinner" runat="server" ></div>
                 </div>
             </div>
 
         </div>
 
     </div>
-
+    <script>
+        var opts = {
+            lines: 17, // The number of lines to draw
+            length: 14, // The length of each line
+            width: 10, // The line thickness
+            radius: 0, // The radius of the inner circle
+            corners: 1, // Corner roundness (0..1)
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            color: '#000', // #rgb or #rrggbb or array of colors
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            shadow: false, // Whether to render a shadow
+            hwaccel: false, // Whether to use hardware acceleration
+            className: 'spinner', // The CSS class to assign to the spinner
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            top: '50%', // Top position relative to parent
+            left: '50%' // Left position relative to parent
+        };
+        var target = document.getElementById('spinner');
+        var spinner = new Spinner(opts).spin(target);
+        $(".uploadBTN").click(function () {
+            $(".spinnerDiv").show();
+            $(".uploadBTN").disabled = true;
+        });
+    </script>
 </asp:Content>

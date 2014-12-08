@@ -46,6 +46,7 @@
                 <asp:ScriptReference Name="WebFormsBundle" />
 
                 <asp:ScriptReference Path="~/Scripts/Chart.min.js" />
+                <asp:ScriptReference Path="~/Scripts/spin.js" />
                 <asp:ScriptReference Path="~/Scripts/ion.rangeSlider.min.js" />
                 <%--Site Scripts--%>
             </Scripts>

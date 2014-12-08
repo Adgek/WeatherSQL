@@ -24,7 +24,15 @@ namespace CopyCat
         {
             System.Diagnostics.Trace.WriteLine("Program started!", "DeveloperLog");
             gen = new ScriptGenerator();
-            fillInStateDropdown();
+            try
+            {
+                fillInStateDropdown();
+            }
+            catch
+            {
+
+            }
+            
         }
         static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
         private Schema sourceSchema;
@@ -98,6 +106,8 @@ namespace CopyCat
 
         protected void UploadButton_Click(object sender, EventArgs e)
         {
+            spinner.Attributes.Remove("hidden");
+            UploadButton.Enabled = false;
             ReadCSV();
             BuildSchema();
             ReadDataToSchema();
@@ -134,6 +144,8 @@ namespace CopyCat
                     NonQueryExec(conn,procsscript);
                 }
             }
+            spinner.Attributes.Add("hidden","hidden");
+            UploadButton.Enabled = true;
         }
 
         private static void NonQueryExec(SqlConnection conn, string script, int timeout=0)
@@ -349,7 +361,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getCoolAndHeatForArea " + 103, 3);
+                rows = QueryExec(conn, "EXEC getCoolAndHeatForArea " + 103, 4);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
@@ -367,7 +379,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "EXEC getTemperatureForArea " + 103, 3);
+                rows = QueryExec(conn, "EXEC getTemperatureForArea " + 103, 5);
             }
             List<string> headers = new List<string>();
             headers.Add("month");
