@@ -56,7 +56,10 @@
             GenerateGraph()
             $("#canvas").replaceWith("<canvas id=\"canvas\" height=\"450\" width=\"1000\"></canvas>");
             var ctx = document.getElementById("canvas").getContext("2d");
-            window.myLine = new Chart(ctx).Line(lineChartData, {});
+            window.myLine = new Chart(ctx).Line(lineChartData, {legendTemplate: "<ul class=\"legend\"><li><span>Charlie</span></li><li><span>Choco</span></li></ul>"});
+            //document.getElementById("legendDiv").innerHTML = window.myLine.generateLegend();
+            legend(document.getElementById("legendDiv"), lineChartData);
+            
         }
 
         
@@ -260,7 +263,7 @@
                 labels: ChartXData,
                 datasets: [
                     {
-                        label: "My Second dataset",
+                        label: "Precipitation",
                         fillColor: "rgba(151,187,205,0.2)",
                         strokeColor: "rgba(151,187,205,1)",
                         pointColor: "rgba(151,187,205,1)",
@@ -272,8 +275,9 @@
                 ]
             }           
             if (GraphType == 2) {
+                lineChartData["datasets"][0].label = "Cooling Days"
                 lineChartData["datasets"].push({
-                    label: "My Second dataset",
+                    label: "Heating Days",
                     fillColor: "rgba(200,0,0,0.2)",
                     strokeColor: "rgba(200,0,0,1)",
                     pointColor: "rgba(200,0,0,1)",
@@ -284,8 +288,9 @@
                 })
             }
             if (GraphType == 3) {
+                lineChartData["datasets"][0].label = "Minimum Temperature"                
                 lineChartData["datasets"].push({
-                    label: "My Second dataset",
+                    label: "Maximum Temperature",
                     fillColor: "rgba(200,0,0,0.2)",
                     strokeColor: "rgba(200,0,0,1)",
                     pointColor: "rgba(200,0,0,1)",
@@ -293,9 +298,9 @@
                     pointHighlightFill: "#fff",
                     pointHighlightStroke: "rgba(151,187,205,1)",
                     data: ChartYData2
-                })
+                })          
                 lineChartData["datasets"].push({
-                    label: "My Second dataset",
+                    label: "Average Temperature",
                     fillColor: "rgba(0,200,0,0.2)",
                     strokeColor: "rgba(0,200,0,1)",
                     pointColor: "rgba(0,200,0,1)",
@@ -420,6 +425,27 @@
                 to: maxGraphYear
             });
         }
+
+        function legend(parent, data) {
+            parent.className = 'legend';
+            var datas = data.hasOwnProperty('datasets') ? data.datasets : data;
+
+            // remove possible children of the parent
+            while (parent.hasChildNodes()) {
+                parent.removeChild(parent.lastChild);
+            }
+
+            datas.forEach(function (d) {
+                var title = document.createElement('span');
+                title.className = 'title';
+                title.style.borderColor = d.hasOwnProperty('strokeColor') ? d.strokeColor : d.color;
+                title.style.borderStyle = 'solid';
+                parent.appendChild(title);
+
+                var text = document.createTextNode(d.label);
+                title.appendChild(text);
+            });
+        }
 	</script>
 
     <!------------------------- Initial Form ------->
@@ -469,6 +495,8 @@
     <div class="jumbotron">
 		<div>
 			<canvas id="canvas" height="450" width="1000"></canvas>
+            <div id="legendDiv"></div>            
+
 			<br />
 			<input type="text" id="XValueSlider" name="XValueSlider" value="" />
 			<label id="leftVal"></label><label id="rightVal"></label>
