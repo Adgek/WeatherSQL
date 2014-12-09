@@ -528,6 +528,16 @@
 		</div>
     </div>
 
+   <div class="row"> 
+       <div class="col-md-4">
+       </div>
+       <div class="col-md-4">
+           <A class="btn btn-default" HREF="javascript:window.print()">Click to Print This Page</A> 
+       </div>
+       <div class="col-md-4">
+       </div>       
+   </div>
+
     <div id="dbFormArea" runat="server">
         <div id="dbForm" runat="server">
             <div class="row">
@@ -554,16 +564,16 @@
                         <input type="button" value="Upload" class="btn uploadBTN btn-default"/>
                     </div>
 
-                    <div id="confirmUploadDiv" style="display:none;">
+                    <div id="confirmUploadDiv" class="well" style="display:none;">
                         Are you sure you want to upload? This will overwrite all data stored.                        
-                        <asp:Button class="btn btn-default" runat="server" Text="Yes" ID="yesBtn" OnClick="UploadButton_Click"></asp:Button>   
+                        <asp:Button class="btn yesBtn btn-default" runat="server" Text="Yes" ID="yesBtn" OnClick="UploadButton_Click"></asp:Button>   
                         <input type="button" value="No" class="btn noBtn btn-default" ID="noBtn"/>
                     </div>                 
                 </div>
                 <div class="col-md-2">
                     <asp:Label runat="server"  ID="StatusLabel" Text="Upload status: " />
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-1" id="spinnerDiv">
                 </div>
             </div>
 
@@ -577,7 +587,34 @@
         });
 
         $(".noBtn").click(function () {
+            document.getElementById('confirmUploadDiv').style.display = "none";
+            document.getElementById('uploadDiv').style.display = "block";
+        });
 
+        $(".yesBtn").click(function () {
+            var opts = {
+                lines: 13, // The number of lines to draw
+                length: 11, // The length of each line
+                width: 9, // The line thickness
+                radius: 0, // The radius of the inner circle
+                corners: 1, // Corner roundness (0..1)
+                rotate: 0, // The rotation offset
+                direction: 1, // 1: clockwise, -1: counterclockwise
+                color: '#000', // #rgb or #rrggbb or array of colors
+                speed: 1, // Rounds per second
+                trail: 60, // Afterglow percentage
+                shadow: false, // Whether to render a shadow
+                hwaccel: false, // Whether to use hardware acceleration
+                className: 'spinner', // The CSS class to assign to the spinner
+                zIndex: 2e9, // The z-index (defaults to 2000000000)
+                top: '50%', // Top position relative to parent
+                left: '50%' // Left position relative to parent
+            };
+            var target = document.getElementById('spinnerDiv');
+            var spinner = new Spinner(opts).spin(target);
+            document.getElementById('spinnerDiv').style.display = "block";
+            document.getElementById('confirmUploadDiv').style.display = "none";
+            document.getElementById('uploadDiv').style.display = "none";
         });
     </script>
 </asp:Content>

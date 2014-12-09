@@ -15,6 +15,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Web.Services;
 using System.Web.Script.Services;
+using System.Threading;
 
 namespace CopyCat
 {
@@ -118,11 +119,11 @@ namespace CopyCat
                 conn.Open();
                 try
                 {
-                    NonQueryExec(conn, dropscript + " "+ DatabaseDealer.GetDBName());
+                    NonQueryExec(conn, dropscript + " " + DatabaseDealer.GetDBName());
 
                     DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
                     System.Diagnostics.Trace.WriteLine("Failed to drop the database.", "DeveloperLog");
@@ -138,7 +139,7 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                foreach(string script in scripts)
+                foreach (string script in scripts)
                     NonQueryExec(conn, script);
 
                 string procsscript;
@@ -147,7 +148,7 @@ namespace CopyCat
                     procsscript = gen.ReadDbaseScript("SqlScripts.views.view" + x + ".sql");
                     NonQueryExec(conn, procsscript);
                     procsscript = gen.ReadDbaseScript("SqlScripts.procedures.procedure" + x + ".sql");
-                    NonQueryExec(conn,procsscript);
+                    NonQueryExec(conn, procsscript);
                 }
             }
         }
