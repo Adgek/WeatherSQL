@@ -427,7 +427,7 @@
         }
 
         function Failure(error) {
-            alert(error);
+            alert("Could not get a response from the database, try refreshing your page");
         }
 
         function UpdateSlider() {         
