@@ -496,7 +496,7 @@
             <br/>    
             <div class="dropdown">
                 <button class="btn btn-default graphSelectionBtn dropdown-toggle" type="button" id="GraphSelection" data-toggle="dropdown" aria-expanded="true">
-                Graphs
+                Precipitation
                 <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu graphSelection" role="menu" aria-labelledby="dropdownMenuGraphSelection">
@@ -646,5 +646,6 @@
             document.getElementById('confirmUploadDiv').style.display = "none";
             document.getElementById('uploadDiv').style.display = "none";
         });
+
     </script>
 </asp:Content>
