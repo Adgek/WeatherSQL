@@ -18,6 +18,8 @@
 
         var Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
 
+
+
         var OriginalChartXDataYears = []
         var OriginalChartXDataMonths = []
         var OriginalChartYData = []
@@ -60,6 +62,26 @@
             //document.getElementById("legendDiv").innerHTML = window.myLine.generateLegend();
             legend(document.getElementById("legendDiv"), lineChartData);
             
+        }
+
+        function SetStateCode(passedState) {
+            StateSelection = passedState;
+        }
+
+        function DrawSelectedGraph() {
+            GraphType = 1 //1 = prec 2 = cooling 3 = temp
+            if(GraphType == 1)
+            {
+                PrecipitationGraph();
+            }
+            else if(GraphType == 2)
+            {
+                CoolingHeatingGraph();
+            }
+            else if(GraphType == 3)
+            {
+                TemperatureGraph();
+            }
         }
 
         
@@ -494,14 +516,8 @@
         <div class="col-md-4"> 
             <label>Area: </label>
             <br />       
-            <div class="dropdown">
-                <button class="btn btn-default  AreaSelection dropdown-toggle" type="button" id="AreaSelection" runat="Server" data-toggle="dropdown" aria-expanded="true">
-                Alabama
-                <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu areaSelection scrollable-menu" role="menu" runat="server" id="stateDropDown">
-                    
-                </ul>
+            <div class="dropdown" runat="server" id="AreaDropdown">
+                
             </div>
         </div>
     </div>

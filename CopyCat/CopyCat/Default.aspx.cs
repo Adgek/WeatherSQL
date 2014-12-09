@@ -422,13 +422,30 @@ namespace CopyCat
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();
-                rows = QueryExec(conn, "SELECT statecode,statename FROM [State]", 2);
+                rows = QueryExec(conn, "SELECT DISTINCT statecode,statename FROM [State] INNER JOIN Weather ON Weather.SID = state.id", 2);
+            }
+            try
+            {
+                AreaDropdown.InnerHtml = "<button class=\"btn btn-default  AreaSelection dropdown-toggle\" type=\"button\" id=\"AreaSelection\" runat=\"Server\" data-toggle=\"dropdown\" aria-expanded=\"true\">" +
+                    rows[0][1] +
+                    "<span class=\"caret\"></span>" +
+                    "</button>" +
+                    "<ul class=\"dropdown-menu areaSelection scrollable-menu\" role\"menu\" runat=\"server\" id=\"stateDropDown\">";
+            }
+            catch
+            {
+                AreaDropdown.InnerHtml = "<button class=\"btn btn-default  AreaSelection dropdown-toggle\" type=\"button\" id=\"AreaSelection\" runat=\"Server\" data-toggle=\"dropdown\" aria-expanded=\"true\">" +
+                    "No Data"+
+                    "<span class=\"caret\"></span>" +
+                    "</button>" +
+                    "<ul class=\"dropdown-menu areaSelection scrollable-menu\" role\"menu\" runat=\"server\" id=\"stateDropDown\">";
             }
             foreach(List<string> row in rows)
             {
-                stateDropDown.InnerHtml += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#\" onclick=\"StateSelection='" + row[0] + "'\">" + row[1] + "</a></li>";
+                AreaDropdown.InnerHtml += "<li role=\"presentation\"><a role=\"menuitem\" tabindex=\"-1\" href=\"#\" onclick=\"StateSelection='" + row[0] + "';DrawSelectedGraph();\">" + row[1] + "</a></li>";
             }
-
+            AreaDropdown.InnerHtml += "</ul>";
+            Page.ClientScript.RegisterStartupScript(this.GetType(), "someID", "SetStateCode(" + rows[0][0] + ")", true);
         }
     }
 }
