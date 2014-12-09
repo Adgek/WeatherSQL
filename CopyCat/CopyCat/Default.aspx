@@ -550,13 +550,15 @@
             <br />
             <div class="row">                
                 <div class="col-md-3">
-                    <div id="uploadDiv">
-                        <asp:Button class="btn uploadBTN btn-default" runat="server" Text="Upload" ID="UploadButton" OnClick="UploadButton_Click"></asp:Button>
+                    <div id="uploadDiv" >
+                        <input type="button" value="Upload" class="btn uploadBTN btn-default"/>
                     </div>
 
-                    <div id="confirmUploadDiv">
-
-                    </div>                    
+                    <div id="confirmUploadDiv" style="display:none;">
+                        Are you sure you want to upload? This will overwrite all data stored.                        
+                        <asp:Button class="btn btn-default" runat="server" Text="Yes" ID="yesBtn" OnClick="UploadButton_Click"></asp:Button>   
+                        <input type="button" value="No" class="btn noBtn btn-default" ID="noBtn"/>
+                    </div>                 
                 </div>
                 <div class="col-md-2">
                     <asp:Label runat="server"  ID="StatusLabel" Text="Upload status: " />
@@ -568,9 +570,13 @@
         </div>
 
     </div>
-    <script>
-        
+    <script>        
         $(".uploadBTN").click(function () {
+            document.getElementById('confirmUploadDiv').style.display = "block";
+            document.getElementById('uploadDiv').style.display = "none";
+        });
+
+        $(".noBtn").click(function () {
 
         });
     </script>

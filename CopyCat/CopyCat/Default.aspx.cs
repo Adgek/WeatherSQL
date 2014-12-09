@@ -20,8 +20,14 @@ namespace CopyCat
 {
     public partial class _Default : Page
     {
+        static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+        private Schema sourceSchema;
+        List<string[]> data = new List<string[]>();
+        private ScriptGenerator gen;
+
         protected void Page_Load(object sender, EventArgs e)
-        {            
+        {
+            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
             gen = new ScriptGenerator();
             try
             {
@@ -30,18 +36,8 @@ namespace CopyCat
             catch
             {
                 System.Diagnostics.Trace.WriteLine("No data to populate the area selector box with.", "DeveloperLog");
-            }
-
-            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            }            
         }
-
-        static string databaseName = "WeatherDB" + DateTime.Now;
-        static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
-        private Schema sourceSchema;
-        List<string[]> data = new List<string[]>();
-
-        private ScriptGenerator gen;
-
 
         // read a database
         private void ReadCSV()
