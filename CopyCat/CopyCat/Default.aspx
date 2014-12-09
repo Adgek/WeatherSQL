@@ -210,7 +210,18 @@
                 var quarter = ChartXData[i].indexOf("Q")
 
                 if (currentYear >= ScrollBarMinimumYear && currentYear <= ScrollBarMaximumYear) {
-                    tempXData.push(ChartXData[i])
+                    if ((ScrollBarMaximumYear - ScrollBarMinimumYear) > 5 && GraphTimeDescriptor == 3) {
+                        if (ChartXData[i].indexOf("January") > -1) {
+                            tempXData.push(ChartXData[i])
+                        }
+                        else {
+                            tempXData.push("")
+                        }                                            
+                    }                    
+                    else {
+                        tempXData.push(ChartXData[i])
+                    }
+                    
                     tempYData.push(ChartYData[i])
 
                     if (ChartYData2.length > 0) {
@@ -221,9 +232,21 @@
                     }
 
                     if (quarter > -1) {
-                        tempXData.push(ChartXData[i + 1])
-                        tempXData.push(ChartXData[i + 2])
-                        tempXData.push(ChartXData[i + 3])
+                        if ((ScrollBarMaximumYear - ScrollBarMinimumYear) > 15 && GraphTimeDescriptor == 2) {
+                            if (ChartXData[i].indexOf("Q1") > -1) {
+                                tempXData.push(ChartXData[i])
+                            }
+                            else {
+                                tempXData.push("")
+                                tempXData.push("")
+                                tempXData.push("")
+                            }
+                        }
+                        else {
+                            tempXData.push(ChartXData[i + 1])
+                            tempXData.push(ChartXData[i + 2])
+                            tempXData.push(ChartXData[i + 3])
+                        }                        
 
                         tempYData.push(ChartYData[i + 1])
                         tempYData.push(ChartYData[i + 2])
@@ -249,15 +272,6 @@
             ChartYData = tempYData
             ChartYData2 = tempYData2
             ChartYData3 = tempYData3
-            // crop the chart data
-
-            //check for type of graph
-
-            //yearly - crop ends
-
-            //monthly - search x value for year string
-
-            //quarterly look for year then take next 3
 
             lineChartData = {
                 labels: ChartXData,
