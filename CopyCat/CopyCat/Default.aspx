@@ -10,6 +10,9 @@
         var GraphType = 1 //1 = prec 2 = cooling 3 = temp
         var StateSelection = 1;
 
+        var GraphTimeNames = ["Yearly", "Quarterly", "Monthly"]
+        var GraphTypeNames = ["Precipitation", "Cooling Days / Heating Days", "Temperature"]
+
         var ScrollBarMinimumYear = 1990
         var ScrollBarMaximumYear = 2015
         
@@ -55,13 +58,13 @@
         }
 
         function DrawGraph() {
+            SetTitle()
             GenerateGraph()
             $("#canvas").replaceWith("<canvas id=\"canvas\" height=\"450\" width=\"1000\"></canvas>");
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myLine = new Chart(ctx).Line(lineChartData, {legendTemplate: "<ul class=\"legend\"><li><span>Charlie</span></li><li><span>Choco</span></li></ul>"});
             //document.getElementById("legendDiv").innerHTML = window.myLine.generateLegend();
-            legend(document.getElementById("legendDiv"), lineChartData);
-            
+            legend(document.getElementById("legendDiv"), lineChartData);            
         }
 
         function SetStateCode(passedState) {
@@ -348,18 +351,22 @@
             }            
         }
 
+        function SetTitle() {
+            document.getElementById("chartTitle").innerHTML = GraphTimeNames[GraphTimeDescriptor - 1] + " " + GraphTypeNames[GraphType - 1] + " Graph";
+        }
+
         function PrecipitationGraph() {
-            GraphType = 1
+            GraphType = 1            
             PageMethods.GetPrecipitationData(StateSelection, PrecipitationSuccess, Failure);
         }
 
         function CoolingHeatingGraph() {
-            GraphType = 2
+            GraphType = 2       
             PageMethods.GetCoolingHeatingDaysData(StateSelection, CoolingHeatingSuccess, Failure);
         }
 
         function TemperatureGraph() {
-            GraphType = 3
+            GraphType = 3            
             PageMethods.GetTemperatureData(StateSelection, TemperatureSuccess, Failure);
         }      
 
@@ -524,6 +531,7 @@
 
     <div class="jumbotron">
 		<div>
+            <label id="chartTitle"></label>
 			<canvas id="canvas" height="450" width="1000"></canvas>
             <div id="legendDiv"></div>            
 
