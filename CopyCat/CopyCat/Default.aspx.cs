@@ -122,7 +122,7 @@ namespace CopyCat
                 conn.Open();
                 try
                 {
-                    NonQueryExec(conn, dropscript + DatabaseDealer.GetDBName());
+                    NonQueryExec(conn, dropscript + " "+ DatabaseDealer.GetDBName());
 
                     DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
                 }

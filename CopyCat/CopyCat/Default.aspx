@@ -522,7 +522,13 @@
             <br />
             <div class="row">                
                 <div class="col-md-3">
-                    <asp:Button class="btn uploadBTN btn-default" runat="server" Text="Upload" ID="UploadButton" OnClick="UploadButton_Click"></asp:Button>
+                    <div id="uploadDiv">
+                        <asp:Button class="btn uploadBTN btn-default" runat="server" Text="Upload" ID="UploadButton" OnClick="UploadButton_Click"></asp:Button>
+                    </div>
+
+                    <div id="confirmUploadDiv">
+
+                    </div>                    
                 </div>
                 <div class="col-md-2">
                     <asp:Label runat="server"  ID="StatusLabel" Text="Upload status: " />
