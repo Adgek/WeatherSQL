@@ -405,6 +405,9 @@
             maxGraphYear = Math.max.apply(Math, OriginalChartXDataYears);
             minGraphYear = Math.min.apply(Math, OriginalChartXDataYears);
 
+            ScrollBarMinimumYear = minGraphYear
+            ScrollBarMaximumYear = maxGraphYear
+
             var slider = $("#XValueSlider").data("ionRangeSlider")
             slider.destroy()
             // Call sliders update method with any params
