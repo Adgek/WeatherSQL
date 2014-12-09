@@ -257,9 +257,16 @@
                     }
 
                     if (quarter > -1) {
-                        tempXData.push(ChartXData[i + 1])
-                        tempXData.push(ChartXData[i + 2])
-                        tempXData.push(ChartXData[i + 3])
+                        if ((ScrollBarMaximumYear - ScrollBarMinimumYear) > 20 && GraphTimeDescriptor == 2) {
+                            tempXData.push("")
+                            tempXData.push("")
+                            tempXData.push("")
+                        }
+                        else {
+                            tempXData.push(ChartXData[i + 1])
+                            tempXData.push(ChartXData[i + 2])
+                            tempXData.push(ChartXData[i + 3])
+                        }
 
                         tempYData.push(ChartYData[i + 1])
                         tempYData.push(ChartYData[i + 2])
