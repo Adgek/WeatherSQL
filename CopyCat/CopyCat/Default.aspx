@@ -72,7 +72,6 @@
         }
 
         function DrawSelectedGraph() {
-            GraphType = 1 //1 = prec 2 = cooling 3 = temp
             if(GraphType == 1)
             {
                 PrecipitationGraph();

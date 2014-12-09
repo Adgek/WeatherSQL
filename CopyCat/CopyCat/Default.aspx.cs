@@ -36,7 +36,7 @@ namespace CopyCat
             }
             catch
             {
-                System.Diagnostics.Trace.WriteLine("No data to populate the area selector box with.", "DeveloperLog");
+                System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "No data to populate the area selector box with.", "DeveloperLog");
             }            
         }
 
@@ -50,7 +50,7 @@ namespace CopyCat
             {
                 try
                 {
-                    System.Diagnostics.Trace.WriteLine("Starting to read in the CSV file.", "DeveloperLog");
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Starting to read in the CSV file.", "DeveloperLog");
                     string filename = Path.GetFileName(FileUploadControl.FileName);
                     FileUploadControl.SaveAs(Server.MapPath("~/") + filename);
                     string fileContents = GetFileContents(FileUploadControl.PostedFile);
@@ -60,12 +60,12 @@ namespace CopyCat
                         throw new Exception("Not enough data was supplied to parse a valid row of weather data.");
                     }
                     ConvertDataToList(importData);
-                    System.Diagnostics.Trace.WriteLine("Finished reading in the CSV file.", "DeveloperLog");
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Finished reading in the CSV file.", "DeveloperLog");
                     StatusLabel.Text = "Upload status: File uploaded!";
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Data not valid! " + ex.Message);
                     StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
                     throw ex;
                 }
@@ -139,12 +139,12 @@ namespace CopyCat
                 catch (Exception ex)
                 {
                     DatabaseDealer.SetDBName(DatabaseDealer.GetDBName(), "WeatherDB" + DateTime.Now.Ticks);
-                    System.Diagnostics.Trace.WriteLine("Failed to drop the database.", "DeveloperLog");
-                    System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Failed to drop the database.", "DeveloperLog");
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Data not valid! " + ex.Message);
                 }
-                System.Diagnostics.Trace.WriteLine("Creating the database.", "DeveloperLog");
+                System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Creating the database.", "DeveloperLog");
                 NonQueryExec(conn, createscript + DatabaseDealer.GetDBName());
-                System.Diagnostics.Trace.WriteLine("Successfully Created the database.", "DeveloperLog");
+                System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Successfully Created the database.", "DeveloperLog");
             }
 
             List<string> scripts = gen.GenerateMasterScript(sourceSchema);
@@ -153,7 +153,16 @@ namespace CopyCat
             {
                 conn.Open();
                 foreach (string script in scripts)
-                    NonQueryExec(conn, script);
+                {
+                    try
+                    {
+                        NonQueryExec(conn, script);
+                    }
+                    catch(Exception ex)
+                    {
+                        System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Encountered an error doing an insert of weather data: " + ex.Message, "DeveloperLog");
+                    }
+                }
 
                 string procsscript;
                 for (int x = 1; x < 4; x++)
@@ -164,6 +173,8 @@ namespace CopyCat
                     NonQueryExec(conn, procsscript);
                 }
             }
+            System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")"+ " The database have been successfully created and populated. " + data.Count + " rows were added to the new database.", "DeveloperLog");
+            fillInStateDropdown();
         }
 
         private static void NonQueryExec(SqlConnection conn, string script, int timeout=0)
@@ -199,7 +210,7 @@ namespace CopyCat
                 }
                 catch
                 {
-                    System.Diagnostics.Trace.WriteLine("Value: '" + row[3] + "' for pcp was invalid for row " + count + ".");
+                    System.Diagnostics.Trace.WriteLine("(User:" + User.Identity.Name + ")" + "Value: '" + row[3] + "' for pcp was invalid for row " + count + ".");
                     Errcount++;
                     continue;
                 }
@@ -229,7 +240,7 @@ namespace CopyCat
             }
             catch
             {
-                System.Diagnostics.Trace.WriteLine("Value: '" + valueToConvert + "' for " + element + " was invalid for row " + count + ".");
+                System.Diagnostics.Trace.WriteLine( "Value: '" + valueToConvert + "' for " + element + " was invalid for row " + count + ".");
                 throw;
             }
             return value;
