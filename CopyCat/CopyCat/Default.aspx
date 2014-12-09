@@ -241,12 +241,12 @@
                         }
                         else {
                             tempXData.push("")
-                        }                                            
-                    }                    
-                    else {
-                        tempXData.push(ChartXData[i])
+                        }
                     }
-                    
+                    else {                        
+                        tempXData.push(ChartXData[i])                        
+                    }
+
                     tempYData.push(ChartYData[i])
 
                     if (ChartYData2.length > 0) {
@@ -257,21 +257,9 @@
                     }
 
                     if (quarter > -1) {
-                        if ((ScrollBarMaximumYear - ScrollBarMinimumYear) > 15 && GraphTimeDescriptor == 2) {
-                            if (ChartXData[i].indexOf("Q1") > -1) {
-                                tempXData.push(ChartXData[i])
-                            }
-                            else {
-                                tempXData.push("")
-                                tempXData.push("")
-                                tempXData.push("")
-                            }
-                        }
-                        else {
-                            tempXData.push(ChartXData[i + 1])
-                            tempXData.push(ChartXData[i + 2])
-                            tempXData.push(ChartXData[i + 3])
-                        }                        
+                        tempXData.push(ChartXData[i + 1])
+                        tempXData.push(ChartXData[i + 2])
+                        tempXData.push(ChartXData[i + 3])
 
                         tempYData.push(ChartYData[i + 1])
                         tempYData.push(ChartYData[i + 2])
