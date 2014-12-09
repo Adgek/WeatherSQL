@@ -23,6 +23,12 @@ namespace CopyCat
             }
         }
 
+        /// <summary>
+        /// Used to send a script to the dbase for a non query 
+        /// </summary>
+        /// <param name="conn">the connection to the dbase</param>
+        /// <param name="script">the script to exec</param>
+        /// <param name="timeout">how long before we timeout</param>
         private static void NonQueryExec(SqlConnection conn, string script, int timeout = 0)
         {
             SqlCommand cmd = new SqlCommand(script, conn);
