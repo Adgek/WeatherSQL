@@ -55,6 +55,10 @@ namespace CopyCat
                     FileUploadControl.SaveAs(Server.MapPath("~/") + filename);
                     string fileContents = GetFileContents(FileUploadControl.PostedFile);
                     string[] importData = fileContents.Split(',');
+                    if(importData.Count() < 40)
+                    {
+                        throw new Exception("Not enough data was supplied to parse a valid row of weather data.");
+                    }
                     ConvertDataToList(importData);
                     System.Diagnostics.Trace.WriteLine("Finished reading in the CSV file.", "DeveloperLog");
                     StatusLabel.Text = "Upload status: File uploaded!";
@@ -63,6 +67,7 @@ namespace CopyCat
                 {
                     System.Diagnostics.Trace.WriteLine("Data not valid! " + ex.Message);
                     StatusLabel.Text = "Upload status: The file could not be uploaded. The following error occured: " + ex.Message;
+                    throw ex;
                 }
             }
         }
@@ -108,7 +113,15 @@ namespace CopyCat
         [WebMethod]
         public void UploadButton_Click(object sender, EventArgs e)
         {
-            ReadCSV();
+            try
+            {
+                ReadCSV();
+            }
+            catch
+            {
+                StatusLabel.Text = "Error: No valid rows were found to parse in the file.";
+                return;
+            }
             BuildSchema();
             ReadDataToSchema();
             string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=master;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
@@ -166,6 +179,7 @@ namespace CopyCat
             CopyCat.Models.Table Weather = sourceSchema.Tables.Where(t => t.Name == "Weather").SingleOrDefault();
             string tmin="", tmax="", tavg= "", pcp = "";
             int count = 1;
+            int Errcount = 0;
             foreach (string[] row in data)
             {
                 try
@@ -176,6 +190,7 @@ namespace CopyCat
                 }
                 catch
                 {
+                    Errcount++;
                     continue;
                 }
                 try
@@ -185,6 +200,7 @@ namespace CopyCat
                 catch
                 {
                     System.Diagnostics.Trace.WriteLine("Value: '" + row[3] + "' for pcp was invalid for row " + count + ".");
+                    Errcount++;
                     continue;
                 }
                 Weather.Rows.Add("(SELECT ID FROM YEAR WHERE yearname = " + row[2].Substring(0, 4) + ")," +
@@ -198,6 +214,10 @@ namespace CopyCat
                                  row[10]); //HDD
                 count++;
             }
+            if(Errcount == data.Count)            
+                StatusLabel.Text += " The file was invalid, no rows could be added to the database.";            
+            else if(Errcount > 0)
+                StatusLabel.Text += " There were " + Errcount + " rows in the file that could be not parsed into a valid database row of weather data.";
         }
 
         private static string GetTemp(int count, string valueToConvert, string element)
