@@ -214,6 +214,7 @@
     <None Include="Properties\PublishProfiles\CopyCat6347.pubxml" />
     <None Include="Properties\PublishProfiles\WeatherDB %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\WeatherDB.pubxml" />
+    <None Include="Properties\PublishProfiles\WeatherDBB.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Report.aspx" />
     <Content Include="Scripts\bootstrap.js" />

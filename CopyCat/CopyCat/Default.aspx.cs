@@ -21,14 +21,14 @@ namespace CopyCat
 {
     public partial class _Default : Page
     {
-        static string conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+        static string conString2 = "Data Source=r2oqwsh7ne.database.windows.net,1433;Initial Catalog=WeatherDB;User Id=matthew;Password=Anselmo1";
         private Schema sourceSchema;
         List<string[]> data = new List<string[]>();
         private ScriptGenerator gen;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            conString2 = "Data Source=r2oqwsh7ne.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=matthew;Password=Anselmo1";
             gen = new ScriptGenerator();
             try
             {
@@ -124,7 +124,7 @@ namespace CopyCat
             }
             BuildSchema();
             ReadDataToSchema();
-            string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=master;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            string conString = "Data Source=r2oqwsh7ne.database.windows.net,1433;Initial Catalog=master;User Id=matthew;Password=Anselmo1";
             string createscript = gen.ReadDbaseScript("SqlScripts.dbasesetup.createdatabase.sql");
             string dropscript = gen.ReadDbaseScript("SqlScripts.dbasesetup.dropdatabase.sql");
             using (SqlConnection conn = new SqlConnection(conString))
@@ -148,7 +148,7 @@ namespace CopyCat
             }
 
             List<string> scripts = gen.GenerateMasterScript(sourceSchema);
-            conString2 = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+            conString2 = "Data Source=r2oqwsh7ne.database.windows.net,1433;Initial Catalog=" + DatabaseDealer.GetDBName() + ";User Id=matthew;Password=Anselmo1";
             using (SqlConnection conn = new SqlConnection(conString2))
             {
                 conn.Open();

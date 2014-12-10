@@ -9,7 +9,7 @@ namespace CopyCat
 {
     public static class DatabaseDealer
     {
-        private static string conString = "Data Source=tcp:edhvxycn0p.database.windows.net,1433;Initial Catalog=myDB1234;User Id=kylfowler@edhvxycn0p;Password=Myadmin123";
+        private static string conString = "Data Source=r2oqwsh7ne.database.windows.net,1433;Initial Catalog=dbname;User Id=matthew;Password=Anselmo1";
 
         public static void SetDBName(string oldName, string newName)
         {
